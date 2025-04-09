@@ -6,14 +6,8 @@ bool comprobarJaqueMate(std::vector<Pieces>& listPiecesPos) {
 	return false;
 }
 
-void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecesPos) {
-	while (!comprobarJaqueMate(listPiecesPos))
-	{
-		for (int i = 0; i < Jugadores; i++)
-		{
-			//Logica de turnos
-		}
-	}
+bool comprobarJaque(std::vector<Pieces>& listPiecesPos) {
+	return false;
 }
 
 void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SIZE][BOARD_SIZE]) {
@@ -21,5 +15,25 @@ void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SI
 	{
 		chessboard[listPiecePos[i].pos.x][listPiecePos[i].pos.y] = listPiecePos[i].piece;
 	}
-	
+
 }
+
+void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecesPos) {
+	
+	while (!comprobarJaqueMate(listPiecesPos))
+	{
+		for (int i = 0; i < Jugadores; i++)
+		{
+			//Logica de turnos
+
+			if (comprobarJaque(listPiecesPos))
+			{
+				if (comprobarJaqueMate(listPiecesPos))
+				{
+					break;
+				}
+			}
+		}
+	}
+}
+
