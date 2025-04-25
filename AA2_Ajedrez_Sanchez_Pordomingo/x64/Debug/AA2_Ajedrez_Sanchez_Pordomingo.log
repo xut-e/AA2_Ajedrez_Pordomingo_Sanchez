@@ -1,4 +1,3 @@
-﻿  main.cpp
-  Play.cpp
-  Generando código...
+﻿  Play.cpp
+C:\Users\eduar\OneDrive\Escritorio\GITHUB\AA2_Ajedrez_Pordomingo_Sanchez\AA2_Ajedrez_Sanchez_Pordomingo\Play.cpp(61,32): warning C4101: 'opcionElegida': variable local sin referencia
   AA2_Ajedrez_Sanchez_Pordomingo.vcxproj -> C:\Users\eduar\OneDrive\Escritorio\GITHUB\AA2_Ajedrez_Pordomingo_Sanchez\x64\Debug\AA2_Ajedrez_Sanchez_Pordomingo.exe

@@ -11,22 +11,86 @@ bool comprobarJaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
+//Funcion para actualizar el tablero, colocamos las piezas que no han sido capturadas
 void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SIZE][BOARD_SIZE]) {
+	
+	initChessBoard(chessboard);
+
 	for (int i = 0; i < TOTAL_PIECES; i++)
 	{
-		chessboard[listPiecePos[i].pos.x][listPiecePos[i].pos.y] = listPiecePos[i].piece;
+		if (listPiecePos[i].active)
+		{
+			chessboard[listPiecePos[i].pos.x][listPiecePos[i].pos.y] = listPiecePos[i].piece;
+		}
 	}
 
 }
 
-void movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador) {
+//Funcion para comprobar si al jugador le pertenece la pieza que hay en la casilla que ha seleccionado
+bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador) {
+	
+	for (int i = 0; i < TOTAL_PIECES; i++)
+	{
+		Pieces pieza = listPiecePos[i];
+		if (pieza.active && pieza.pos.x == x && pieza.pos.y == y)
+		{
+			if (jugador == JUGADOR1)
+			{
+				if (!(i >= 16 && i <= 31))
+				{
+					std::cout << "Esa pieza no es tuya!" << std::endl;
+				}
+				return (i >= 16 && i <= 31);
+			}
+			else
+			{
+				if (!(i >= 0 && i <= 15))
+				{
+					std::cout << "Esa pieza no es tuya!" << std::endl;
+				}
+				return (i >= 0 && i <= 15);
+			}
+		}
+	}
 
+	std::cout << "No hay ninguna pieza ahi!" << std::endl;
+
+	return false;
+}
+
+void movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador) {
+	
+	int minimoRango, maximoRango, opcionElegida, x, y;
+
+	if (jugador == JUGADOR1)
+	{
+		minimoRango = 16;
+		maximoRango = 31;
+	}
+	else
+	{
+		minimoRango = 0;
+		maximoRango = 15;
+	}
+
+	do
+	{
+		std::cout << "Selecciona una pieza para mover (fila y columna): ";
+		std::cin >> x >> y;
+
+		x = 8 - x;
+		y -= 1;
+
+	} while (!playerOwnsPiece(x, y, listPiecePos, jugador));
+
+	//Si la pieza le pertenece comienza la logica de movimiento
 }
 
 bool comprobarTablas(std::vector<Pieces> listPiecesPos, int jugador) {
 	return false;
 }
 
+//Funcion principal del juego
 void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecesPos) {
 	
 	bool checkmate = false, rendicion = false, tablas = false;
@@ -35,21 +99,15 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 	
 	while (true)
 	{
+		//For para los turnos mientras no haya jaque mate o rendicion o tablas
 		for (int i = 0; i < JUGADORES; i++)
 		{
-			
-			//Menú:
-				//1. Mover
-				//2. Rendirse
-				//3. Ofrecer tablas
-
-			//Logica de movimientos
-
 			do
 			{
 				system("cls");
 				viewChessBoard(chessboard);
 
+				//Menu que permite al jugador escoger que hacer en su turno
 				std::cout << "Turno de " << ((i == JUGADOR1) ? "blancas." : "negras.") << std::endl;
 
 				std::cout << "\t 1. Mover. \n \t 2. Rendirse. \n \t 3. Ofrecer tablas. \n Elige una opcion: ";
@@ -88,6 +146,11 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 					Sleep(1500);
 				}
 
+				if (checkmate || rendicion || tablas)
+				{
+					break;
+				}
+
 			} while (opcionElegida != '1');
 
 			if (rendicion)
@@ -120,12 +183,13 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 			}
 		}
 
-		if (checkmate)
+		if (checkmate || rendicion || tablas)
 		{
 			break;
 		}
 	}
 
+	//Finalizacion de la partida, especificamos si hay ganador quien es y si no lo hay declaramos empate
 	if (ganador == JUGADOR1)
 	{
 		if (rendicion)

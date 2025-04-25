@@ -2,7 +2,7 @@
 #include "Const.h"
 #include "utils.h"
 
-
+//Inicializamos la lista de piezas con las piezas que habrá y las metemos en una lista
 std::vector<char> initPieces() {
 	std::vector<char> pieceList;
 	char blackPieces[TOTAL_PIECES / 2] = { BLACK_ROOK, BLACK_KNIGHT, BLACK_BISHOP, BLACK_QUEEN, BLACK_KING, BLACK_BISHOP, BLACK_KNIGHT, BLACK_ROOK,BLACK_PAWN,BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN, BLACK_PAWN };
@@ -19,6 +19,7 @@ std::vector<char> initPieces() {
 	return pieceList;
 }
 
+//Inicializamos el tablero, nos ayudará en cada turno para "vaciarlo"
 void initChessBoard(char chessboard[BOARD_SIZE][BOARD_SIZE]) {
 	for (int i = 0; i < BOARD_SIZE; i++)
 	{
@@ -36,6 +37,7 @@ void initChessBoard(char chessboard[BOARD_SIZE][BOARD_SIZE]) {
 	}
 }
 
+//Inicializamos la lista de posiciones en las que irán las piezas al comienzo de la partida.
 std::vector<Position> initPosPieces(std::vector<char> pieceList) {
 	std::vector<Position> Posiciones;
 	for (int i = 0; i < 2; i++)
@@ -56,6 +58,7 @@ std::vector<Position> initPosPieces(std::vector<char> pieceList) {
 	return Posiciones;
 }
 
+//Juntamos las listas de piezas y posiciones en una, además asignamos el valor active=true que nos permitirá diferenciar la piezas capturadas y no
 std::vector<Pieces> initPieceList(std::vector<char> piecesList, std::vector<Position> positionList) {
 	
 	std::vector<Pieces> listPiecePos(TOTAL_PIECES);
@@ -64,12 +67,14 @@ std::vector<Pieces> initPieceList(std::vector<char> piecesList, std::vector<Posi
 	{
 		listPiecePos[i].piece = piecesList[i];
 		listPiecePos[i].pos = positionList[i];
+		listPiecePos[i].active = true;
 	}
 
 
 	return listPiecePos;
 }
 
+//Funcion para imprimir tablero
 void viewChessBoard(char chessboard[BOARD_SIZE][BOARD_SIZE]) {
 	std::cout << ' ' << ' ';
 	for (int i = 0; i < BOARD_SIZE; i++)

@@ -13,3 +13,5 @@ void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SI
 void movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador);
 
 bool comprobarTablas(std::vector<Pieces> listPiecesPos, int jugador);
+
+bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador);
