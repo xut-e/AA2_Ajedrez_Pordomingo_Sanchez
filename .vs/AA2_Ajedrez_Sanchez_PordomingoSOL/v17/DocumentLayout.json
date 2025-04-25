@@ -3,36 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\utils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\utils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Const.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Const.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\utils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\utils.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Library.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Library.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Play.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Play.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Init.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Play.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Play.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Init.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Play.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Play.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6E54360D-B3A8-4588-9288-2BC2EFC86853}|AA2_Ajedrez_Sanchez_Pordomingo\\AA2_Ajedrez_Sanchez_Pordomingo.vcxproj|solutionrelative:AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -42,30 +42,30 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp",
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp",
               "ToolTip": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp",
               "RelativeToolTip": "AA2_Ajedrez_Sanchez_Pordomingo\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-07T11:38:57.954Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "Init.cpp",
               "DocumentMoniker": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp",
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp",
               "ToolTip": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp",
               "RelativeToolTip": "AA2_Ajedrez_Sanchez_Pordomingo\\Init.cpp",
-              "ViewState": "AgIAAEIAAAAAAAAAAAAAAEEAAAAoAAAAAAAAAA==",
+              "ViewState": "AgIAAEUAAAAAAAAAAAAAAEcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-07T11:38:57.971Z",
               "EditorCaption": ""
@@ -78,35 +78,36 @@
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\Play.cpp",
               "ToolTip": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Play.cpp",
               "RelativeToolTip": "AA2_Ajedrez_Sanchez_Pordomingo\\Play.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAABYAAAAAAAAAA==",
+              "ViewState": "AgIAAA8AAAAAAAAAAAAAABAAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-04-07T11:38:57.973Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 4,
               "Title": "Play.h",
               "DocumentMoniker": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Play.h",
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\Play.h",
               "ToolTip": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Play.h",
               "RelativeToolTip": "AA2_Ajedrez_Sanchez_Pordomingo\\Play.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-07T11:38:57.969Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
               "Title": "Init.h",
               "DocumentMoniker": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.h",
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\Init.h",
               "ToolTip": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Init.h",
               "RelativeToolTip": "AA2_Ajedrez_Sanchez_Pordomingo\\Init.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-04-07T11:38:57.975Z"
+              "WhenOpened": "2025-04-07T11:38:57.975Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -116,14 +117,14 @@
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\Library.h",
               "ToolTip": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Library.h",
               "RelativeToolTip": "AA2_Ajedrez_Sanchez_Pordomingo\\Library.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-07T11:38:57.977Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Const.h",
               "DocumentMoniker": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\Const.h",
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\Const.h",
@@ -136,13 +137,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "utils.h",
               "DocumentMoniker": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\utils.h",
               "RelativeDocumentMoniker": "AA2_Ajedrez_Sanchez_Pordomingo\\utils.h",
               "ToolTip": "C:\\Users\\eduar\\OneDrive\\Escritorio\\GITHUB\\AA2_Ajedrez_Pordomingo_Sanchez\\AA2_Ajedrez_Sanchez_Pordomingo\\utils.h",
               "RelativeToolTip": "AA2_Ajedrez_Sanchez_Pordomingo\\utils.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAACAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-04-07T11:38:57.981Z",
               "EditorCaption": ""

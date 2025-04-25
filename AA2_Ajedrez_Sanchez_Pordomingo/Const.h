@@ -20,9 +20,10 @@
 #define BLACK_BISHOP 'b'
 #define BLACK_KING 'k'
 
-#define Jugador1 0
-#define Jugador2 1
-#define Jugadores 2
+#define JUGADOR1 0
+#define JUGADOR2 1
+#define JUGADORES 2
+#define TABLAS 2
 
 #define TOTAL_PIECES 32
 
