@@ -7,4 +7,4 @@ bool menuMovimiento();
 
 bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador);
 
-void movimiento(std::vector<Pieces>& listPiecePos, int idPieza);
+void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador);

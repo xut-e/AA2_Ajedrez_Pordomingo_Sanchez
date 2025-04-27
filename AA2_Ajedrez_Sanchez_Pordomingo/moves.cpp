@@ -5,32 +5,13 @@
 #include "Play.h"
 #include "comprobaciones.h"
 
-void movimiento(std::vector<Pieces>& listPiecePos, int idPieza) {
+void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador) {
 
-	if (listPiecePos[idPieza].piece == BLACK_PAWN || listPiecePos[idPieza].piece == WHITE_PAWN)
-	{
+	bool comer = false, movimientoValido;
 
-	}
-	else if (listPiecePos[idPieza].piece == BLACK_ROOK || listPiecePos[idPieza].piece == WHITE_ROOK)
-	{
+	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido);
 
-	}
-	else if (listPiecePos[idPieza].piece == BLACK_KNIGHT || listPiecePos[idPieza].piece == WHITE_KNIGHT)
-	{
-
-	}
-	else if (listPiecePos[idPieza].piece == BLACK_BISHOP || listPiecePos[idPieza].piece == WHITE_BISHOP)
-	{
-
-	}
-	else if (listPiecePos[idPieza].piece == BLACK_KING || listPiecePos[idPieza].piece == WHITE_KING)
-	{
-
-	}
-	else if (listPiecePos[idPieza].piece == BLACK_QUEEN || listPiecePos[idPieza].piece == WHITE_QUEEN)
-	{
-
-	}
+	
 }
 
 bool menuMovimiento() {
@@ -97,7 +78,7 @@ bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& lis
 	}
 	else
 	{
-		movimiento(listPiecePos, idPieza);
+		movimiento(listPiecePos, idPieza, jugador);
 		return true;
 	}
 }
