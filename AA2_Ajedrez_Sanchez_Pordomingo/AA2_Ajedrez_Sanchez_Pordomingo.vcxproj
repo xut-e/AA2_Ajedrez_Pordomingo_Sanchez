@@ -127,14 +127,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="comprobaciones.cpp" />
     <ClCompile Include="Init.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="moves.cpp" />
     <ClCompile Include="Play.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="comprobaciones.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="Const.h" />
     <ClInclude Include="Library.h" />
+    <ClInclude Include="moves.h" />
     <ClInclude Include="Play.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
