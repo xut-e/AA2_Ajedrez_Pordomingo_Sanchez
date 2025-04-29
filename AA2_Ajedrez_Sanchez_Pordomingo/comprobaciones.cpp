@@ -4,8 +4,68 @@
 #include "init.h"
 #include "Play.h"
 
-void piezaEnMedio() {
+bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos) {
 
+	while (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN)
+	{
+		for (int i = casillaInicial.x + 1; i < casillaFinal.x; i++)
+		{
+			//Abajo 
+			for (int j = 0; j < listPiecePos.size(); j++)
+			{
+				if (i == listPiecePos[j].pos.x && casillaInicial.y == listPiecePos[j].pos.y && listPiecePos[j].active)
+				{
+					return true;
+				}
+			}
+		}
+		for (int i = casillaInicial.x - 1; i > casillaFinal.x; i--)
+		{
+			//Arriba
+			for (int j = 0; j < listPiecePos.size(); j++)
+			{
+				if (i == listPiecePos[j].pos.x && casillaInicial.y == listPiecePos[j].pos.y && listPiecePos[j].active)
+				{
+					return true;
+				}
+			}
+
+		}
+		for (int i = casillaInicial.y + 1; i < casillaFinal.y; i++)
+		{
+			//Derecha
+			for (int j = 0; j < listPiecePos.size(); j++)
+			{
+				if (i == listPiecePos[j].pos.y && casillaInicial.x == listPiecePos[j].pos.x && listPiecePos[j].active)
+				{
+					return true;
+				}
+			}
+		}
+		for (int i = casillaInicial.y - 1; i < casillaFinal.y; i--)
+		{
+			//Izquierda
+			for (int j = 0; j < listPiecePos.size(); j++)
+			{
+				if (i == listPiecePos[j].pos.y && casillaInicial.x == listPiecePos[j].pos.x && listPiecePos[j].active)
+				{
+					return true;
+				}
+			}
+		}
+
+		break;
+	}
+	
+		
+	
+
+	return false;
+	
+}
+
+bool casillaAtacada(int x, int y) {
+	return false;
 }
 
 bool comprobarJaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
@@ -59,6 +119,10 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido) {
 	
 	int idPiezaComida, x, y;
+
+	Position casillaInicial = { listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y };
+
+	
 	
 	std::cout << "Introduce la casilla a la que moveras (fila y columna): ";
 
@@ -68,8 +132,15 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 
 		std::cin >> x >> y;
 
+		//Validarsi estadentro del tablero
+
 		x = 8 - x;
 		y -= 1;
+
+
+		//Despues de validacion de x e y
+
+		Position casillaFinal = { x,y };
 
 		for (int i = 0; i < listPiecePos.size(); i++)
 		{
@@ -104,6 +175,8 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 
 
 
+		
+
 
 
 
@@ -111,16 +184,16 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 		{
 			if (comer)
 			{
-				if (x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1))
+				if ((x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
 				{
 					movimientoValido = true;
 				}
 			}
-			else if (x == listPiecePos[idPieza].pos.x + 1 && y == listPiecePos[idPieza].pos.y)
+			else if ((x == listPiecePos[idPieza].pos.x + 1 && y == listPiecePos[idPieza].pos.y) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
 			{
 				movimientoValido = true;
 			}
-			else if (listPiecePos[idPieza].pos.x == 1)
+			else if ((listPiecePos[idPieza].pos.x == 1) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
 			{
 				if (x == listPiecePos[idPieza].pos.x + 2 && y == listPiecePos[idPieza].pos.y)
 				{
@@ -142,11 +215,11 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 					movimientoValido = true;
 				}
 			}
-			else if ((x == listPiecePos[idPieza].pos.x - 1 && y == listPiecePos[idPieza].pos.y))
+			else if (((x == listPiecePos[idPieza].pos.x - 1 && y == listPiecePos[idPieza].pos.y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
 			{
 				movimientoValido = true;
 			}
-			else if (listPiecePos[idPieza].pos.x == 6)
+			else if ((listPiecePos[idPieza].pos.x == 6) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
 			{
 				if (x == listPiecePos[idPieza].pos.x - 2 && y == listPiecePos[idPieza].pos.y)
 				{
@@ -160,7 +233,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 		}
 		else if (listPiecePos[idPieza].piece == BLACK_ROOK || listPiecePos[idPieza].piece == WHITE_ROOK)
 		{
-			if (x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y) || y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x))
+			if (((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
 			{
 				movimientoValido = true;
 			}
@@ -171,19 +244,47 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 		}
 		else if (listPiecePos[idPieza].piece == BLACK_KNIGHT || listPiecePos[idPieza].piece == WHITE_KNIGHT)
 		{
-
+			if ((x == listPiecePos[idPieza].pos.x + 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x - 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)) || (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)))
+			{
+				movimientoValido = true;
+			}
+			else
+			{
+				movimientoValido = false;
+			}
 		}
 		else if (listPiecePos[idPieza].piece == BLACK_BISHOP || listPiecePos[idPieza].piece == WHITE_BISHOP)
 		{
-
+			if (((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
+			{
+				movimientoValido = true;
+			}
+			else
+			{
+				movimientoValido = false;
+			}
 		}
 		else if (listPiecePos[idPieza].piece == BLACK_KING || listPiecePos[idPieza].piece == WHITE_KING)
 		{
-
+			if ((((x == listPiecePos[idPieza].pos.x || x == listPiecePos[idPieza].pos.x - 1|| x == listPiecePos[idPieza].pos.x + 1) && (y == listPiecePos[idPieza].pos.y || y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !(x == listPiecePos[idPieza].pos.x && y == listPiecePos[idPieza].pos.y) && !casillaAtacada(x, y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
+			{
+				movimientoValido = true;
+			}
+			else
+			{
+				movimientoValido = false;
+			}
 		}
 		else if (listPiecePos[idPieza].piece == BLACK_QUEEN || listPiecePos[idPieza].piece == WHITE_QUEEN)
 		{
-
+			if ((((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) || ((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x)))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
+			{
+				movimientoValido = true;
+			}
+			else
+			{
+				movimientoValido = false;
+			}
 		}
 	} while (!movimientoValido);
 }

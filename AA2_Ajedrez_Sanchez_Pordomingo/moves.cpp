@@ -64,6 +64,15 @@ bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& lis
 		x = 8 - x;
 		y -= 1;
 
+		for (int i = 0; i < listPiecePos.size(); i++)
+		{
+			if (x == listPiecePos[i].pos.x && y == listPiecePos[i].pos.y)
+			{
+				idPieza = i;
+				break;
+			}
+		}
+
 	} while (!playerOwnsPiece(x, y, listPiecePos, jugador, idPieza));
 
 	//Si la pieza le pertenece comienza la logica de movimiento
