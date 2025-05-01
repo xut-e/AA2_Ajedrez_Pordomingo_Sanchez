@@ -3,6 +3,7 @@
 #include "Const.h"
 #include "init.h"
 #include "Play.h"
+#include "moves.h"
 
 bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos, bool comer, bool salidaMaxima) {
 
@@ -127,7 +128,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 	bool salidaMaxima = false;
 
 	Position casillaInicial = { listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y };
-
+	Position casillaFinal;
 	
 	
 	std::cout << "Introduce la casilla a la que moveras (fila y columna): ";
@@ -150,7 +151,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 		} while (!(x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE));
 		
 
-		Position casillaFinal = { x,y };
+		casillaFinal = { x,y };
 
 		for (int i = 0; i < listPiecePos.size(); i++)
 		{
@@ -327,4 +328,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 		}
 
 	} while (!movimientoValido);
+
+	cambiarPosicion(idPieza, casillaFinal, listPiecePos);
+	
 }

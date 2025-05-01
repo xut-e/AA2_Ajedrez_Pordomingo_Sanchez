@@ -37,6 +37,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 			start:
 
 				system("cls");
+				updateChessboard(listPiecesPos, chessboard);
 				viewChessBoard(chessboard);
 
 				//Menu que permite al jugador escoger que hacer en su turno

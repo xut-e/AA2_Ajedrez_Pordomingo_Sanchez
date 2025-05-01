@@ -13,6 +13,11 @@ void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, boo
 
 }
 
+void cambiarPosicion(int idPieza, Position casillaFinal, std::vector<Pieces>& listPiecePos) {
+	listPiecePos[idPieza].pos.x = casillaFinal.x;
+	listPiecePos[idPieza].pos.y = casillaFinal.y;
+}
+
 bool menuMovimiento() {
 	char opcion;
 
@@ -81,7 +86,7 @@ choosePiece:
 			}
 		}
 
-	} while (!playerOwnsPiece(x, y, listPiecePos, jugador, idPieza));
+	} while (!playerOwnsPiece(x, y, listPiecePos, jugador, idPieza) && listPiecePos[idPieza].active);
 
 	//Si la pieza le pertenece comienza la logica de movimiento
 
