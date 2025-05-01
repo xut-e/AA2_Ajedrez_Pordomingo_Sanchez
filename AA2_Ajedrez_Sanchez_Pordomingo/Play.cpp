@@ -34,6 +34,8 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 		{
 			do
 			{
+			start:
+
 				system("cls");
 				viewChessBoard(chessboard);
 
@@ -45,7 +47,14 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 
 				if (opcionElegida == '1')
 				{
-					movePiece(chessboard, listPiecesPos, i);
+					if (movePiece(chessboard, listPiecesPos, i))
+					{
+
+					}
+					else
+					{
+						goto start;
+					}
 
 				}
 				else if (opcionElegida == '2')
@@ -58,6 +67,10 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 						rendicion = true;
 						break;
 					}
+					else
+					{
+						goto start;
+					}
 				}
 				else if (opcionElegida == '3')
 				{
@@ -69,12 +82,17 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 					{
 						tablas = true;
 					}
+					else
+					{
+						goto start;
+					}
 				}
 				else
 				{
 					system("cls");
 					std::cout << "Opcion invalida!";
 					Sleep(1500);
+					goto start;
 				}
 
 				if (checkmate || rendicion || tablas)

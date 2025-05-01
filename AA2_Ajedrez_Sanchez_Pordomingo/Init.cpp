@@ -68,6 +68,7 @@ std::vector<Pieces> initPieceList(std::vector<char> piecesList, std::vector<Posi
 		listPiecePos[i].piece = piecesList[i];
 		listPiecePos[i].pos = positionList[i];
 		listPiecePos[i].active = true;
+		listPiecePos[i].moved = false;
 	}
 
 

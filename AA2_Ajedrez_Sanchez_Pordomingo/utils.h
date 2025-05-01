@@ -8,6 +8,7 @@ struct Position
 
 struct Pieces {
 	bool active;
+	bool moved;
 	char piece;
 	Position pos;
 };

@@ -1,8 +1,3 @@
-﻿  comprobaciones.cpp
-  Init.cpp
-  main.cpp
-  moves.cpp
-C:\Users\RaulSanchezRuf\Documents\GitHub\AA2_Ajedrez_Pordomingo_Sanchez\AA2_Ajedrez_Sanchez_Pordomingo\moves.cpp(46,32): warning C4101: 'opcionElegida': unreferenced local variable
-  Play.cpp
-  Generating Code...
-  AA2_Ajedrez_Sanchez_Pordomingo.vcxproj -> C:\Users\RaulSanchezRuf\Documents\GitHub\AA2_Ajedrez_Pordomingo_Sanchez\x64\Debug\AA2_Ajedrez_Sanchez_Pordomingo.exe
+﻿  moves.cpp
+C:\Users\eduar\OneDrive\Escritorio\GITHUB\AA2_Ajedrez_Pordomingo_Sanchez\AA2_Ajedrez_Sanchez_Pordomingo\moves.cpp(47,32): warning C4101: 'opcionElegida': variable local sin referencia
+  AA2_Ajedrez_Sanchez_Pordomingo.vcxproj -> C:\Users\eduar\OneDrive\Escritorio\GITHUB\AA2_Ajedrez_Pordomingo_Sanchez\x64\Debug\AA2_Ajedrez_Sanchez_Pordomingo.exe

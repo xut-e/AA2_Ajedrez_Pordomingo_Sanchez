@@ -4,9 +4,9 @@
 #include "init.h"
 #include "Play.h"
 
-bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos) {
+bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos, bool comer, bool salidaMaxima) {
 
-	if (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN)
+	if (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN || ((pieza == WHITE_PAWN || pieza == BLACK_PAWN) && !comer && salidaMaxima))
 	{
 		// Movimiento vertical (misma columna)
 		if (casillaInicial.y == casillaFinal.y) 
@@ -124,6 +124,7 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido) {
 	
 	int idPiezaComida, x, y;
+	bool salidaMaxima = false;
 
 	Position casillaInicial = { listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y };
 
@@ -179,115 +180,151 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 		if (!movimientoValido)
 		{
 			std::cout << "No puedes mover ahi!" << std::endl;
-			continue;
+			
 		}
-
-
-		if (listPiecePos[idPieza].piece == BLACK_PAWN)
+		else
 		{
-			if (comer)
+			if ((listPiecePos[idPieza].piece == WHITE_PAWN || listPiecePos[idPieza].piece == BLACK_PAWN) && !listPiecePos[idPieza].moved)
 			{
-				if ((x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-				{
-					movimientoValido = true;
-				}
-			}
-			else if ((x == listPiecePos[idPieza].pos.x + 1 && y == listPiecePos[idPieza].pos.y) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-			{
-				movimientoValido = true;
-			}
-			else if ((listPiecePos[idPieza].pos.x == 1) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-			{
-				if (x == listPiecePos[idPieza].pos.x + 2 && y == listPiecePos[idPieza].pos.y)
-				{
-					movimientoValido = true;
-				}
-			}
-			else
-			{
-				movimientoValido = false;
+				salidaMaxima = true;
 			}
 
-		}
-		else if (listPiecePos[idPieza].piece == WHITE_PAWN)
-		{
-			if (comer)
+			if (listPiecePos[idPieza].piece == BLACK_PAWN)
 			{
-				if (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1))
+				if (comer)
+				{
+					if ((x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)))
+					{
+						movimientoValido = true;
+					}
+				}
+				else
+				{
+					if (salidaMaxima && !comer)
+					{
+						if (x == listPiecePos[idPieza].pos.x + 2 && y == listPiecePos[idPieza].pos.y && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+						{
+							movimientoValido = true;
+						}
+					}
+
+					if ((x == listPiecePos[idPieza].pos.x + 1 && y == listPiecePos[idPieza].pos.y) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+					{
+						movimientoValido = true;
+					}
+					else if ((listPiecePos[idPieza].pos.x == 1) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+					{
+						if (x == listPiecePos[idPieza].pos.x + 2 && y == listPiecePos[idPieza].pos.y)
+						{
+							movimientoValido = true;
+						}
+					}
+					else
+					{
+						movimientoValido = false;
+					}
+				}
+				
+
+			}
+			else if (listPiecePos[idPieza].piece == WHITE_PAWN)
+			{
+				if (comer)
+				{
+					if (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1))
+					{
+						movimientoValido = true;
+					}
+				}
+				else
+				{
+					if (salidaMaxima && !comer)
+					{
+						if (x == listPiecePos[idPieza].pos.x - 2 && y == listPiecePos[idPieza].pos.y && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+						{
+							movimientoValido = true;
+						}
+					}
+
+					if (((x == listPiecePos[idPieza].pos.x - 1 && y == listPiecePos[idPieza].pos.y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+					{
+						movimientoValido = true;
+					}
+					else if ((listPiecePos[idPieza].pos.x == 6) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+					{
+						if (x == listPiecePos[idPieza].pos.x - 2 && y == listPiecePos[idPieza].pos.y)
+						{
+							movimientoValido = true;
+						}
+					}
+					else
+					{
+						movimientoValido = false;
+					}
+				}
+				
+			}
+			else if (listPiecePos[idPieza].piece == BLACK_ROOK || listPiecePos[idPieza].piece == WHITE_ROOK)
+			{
+				if (((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
 				{
 					movimientoValido = true;
 				}
+				else
+				{
+					movimientoValido = false;
+				}
 			}
-			else if (((x == listPiecePos[idPieza].pos.x - 1 && y == listPiecePos[idPieza].pos.y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
+			else if (listPiecePos[idPieza].piece == BLACK_KNIGHT || listPiecePos[idPieza].piece == WHITE_KNIGHT)
 			{
-				movimientoValido = true;
-			}
-			else if ((listPiecePos[idPieza].pos.x == 6) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-			{
-				if (x == listPiecePos[idPieza].pos.x - 2 && y == listPiecePos[idPieza].pos.y)
+				if ((x == listPiecePos[idPieza].pos.x + 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x - 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)) || (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)))
 				{
 					movimientoValido = true;
 				}
+				else
+				{
+					movimientoValido = false;
+				}
 			}
-			else
+			else if (listPiecePos[idPieza].piece == BLACK_BISHOP || listPiecePos[idPieza].piece == WHITE_BISHOP)
 			{
-				movimientoValido = false;
+				if (((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+				{
+					movimientoValido = true;
+				}
+				else
+				{
+					movimientoValido = false;
+				}
+			}
+			else if (listPiecePos[idPieza].piece == BLACK_KING || listPiecePos[idPieza].piece == WHITE_KING)
+			{
+				if ((((x == listPiecePos[idPieza].pos.x || x == listPiecePos[idPieza].pos.x - 1 || x == listPiecePos[idPieza].pos.x + 1) && (y == listPiecePos[idPieza].pos.y || y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !(x == listPiecePos[idPieza].pos.x && y == listPiecePos[idPieza].pos.y) && !casillaAtacada(x, y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+				{
+					movimientoValido = true;
+				}
+				else
+				{
+					movimientoValido = false;
+				}
+			}
+			else if (listPiecePos[idPieza].piece == BLACK_QUEEN || listPiecePos[idPieza].piece == WHITE_QUEEN)
+			{
+				if ((((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) || ((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x)))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+				{
+					movimientoValido = true;
+				}
+				else
+				{
+					movimientoValido = false;
+				}
 			}
 		}
-		else if (listPiecePos[idPieza].piece == BLACK_ROOK || listPiecePos[idPieza].piece == WHITE_ROOK)
+
+		if (!movimientoValido)
 		{
-			if (((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-			{
-				movimientoValido = true;
-			}
-			else
-			{
-				movimientoValido = false;
-			}
+			break;
 		}
-		else if (listPiecePos[idPieza].piece == BLACK_KNIGHT || listPiecePos[idPieza].piece == WHITE_KNIGHT)
-		{
-			if ((x == listPiecePos[idPieza].pos.x + 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x - 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)) || (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)))
-			{
-				movimientoValido = true;
-			}
-			else
-			{
-				movimientoValido = false;
-			}
-		}
-		else if (listPiecePos[idPieza].piece == BLACK_BISHOP || listPiecePos[idPieza].piece == WHITE_BISHOP)
-		{
-			if (((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-			{
-				movimientoValido = true;
-			}
-			else
-			{
-				movimientoValido = false;
-			}
-		}
-		else if (listPiecePos[idPieza].piece == BLACK_KING || listPiecePos[idPieza].piece == WHITE_KING)
-		{
-			if ((((x == listPiecePos[idPieza].pos.x || x == listPiecePos[idPieza].pos.x - 1|| x == listPiecePos[idPieza].pos.x + 1) && (y == listPiecePos[idPieza].pos.y || y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !(x == listPiecePos[idPieza].pos.x && y == listPiecePos[idPieza].pos.y) && !casillaAtacada(x, y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-			{
-				movimientoValido = true;
-			}
-			else
-			{
-				movimientoValido = false;
-			}
-		}
-		else if (listPiecePos[idPieza].piece == BLACK_QUEEN || listPiecePos[idPieza].piece == WHITE_QUEEN)
-		{
-			if ((((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) || ((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x)))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos))
-			{
-				movimientoValido = true;
-			}
-			else
-			{
-				movimientoValido = false;
-			}
-		}
+
 	} while (!movimientoValido);
 }
