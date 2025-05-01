@@ -6,59 +6,64 @@
 
 bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos) {
 
-	while (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN)
+	if (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN)
 	{
-		for (int i = casillaInicial.x + 1; i < casillaFinal.x; i++)
+		// Movimiento vertical (misma columna)
+		if (casillaInicial.y == casillaFinal.y) 
 		{
-			//Abajo 
-			for (int j = 0; j < listPiecePos.size(); j++)
-			{
-				if (i == listPiecePos[j].pos.x && casillaInicial.y == listPiecePos[j].pos.y && listPiecePos[j].active)
-				{
-					return true;
-				}
-			}
-		}
-		for (int i = casillaInicial.x - 1; i > casillaFinal.x; i--)
-		{
-			//Arriba
-			for (int j = 0; j < listPiecePos.size(); j++)
-			{
-				if (i == listPiecePos[j].pos.x && casillaInicial.y == listPiecePos[j].pos.y && listPiecePos[j].active)
-				{
-					return true;
-				}
-			}
+			int step = (casillaFinal.x > casillaInicial.x) ? 1 : -1;
 
-		}
-		for (int i = casillaInicial.y + 1; i < casillaFinal.y; i++)
-		{
-			//Derecha
-			for (int j = 0; j < listPiecePos.size(); j++)
+			for (int i = casillaInicial.x + step; i != casillaFinal.x; i += step) 
 			{
-				if (i == listPiecePos[j].pos.y && casillaInicial.x == listPiecePos[j].pos.x && listPiecePos[j].active)
+				for (size_t j = 0; j < listPiecePos.size(); j++) 
 				{
-					return true;
+					if (listPiecePos[j].active && listPiecePos[j].pos.x == i && listPiecePos[j].pos.y == casillaInicial.y) 
+					{
+						return true;
+					}
 				}
 			}
 		}
-		for (int i = casillaInicial.y - 1; i < casillaFinal.y; i--)
+		// Movimiento horizontal (misma fila)
+		else if (casillaInicial.x == casillaFinal.x) 
 		{
-			//Izquierda
-			for (int j = 0; j < listPiecePos.size(); j++)
-			{
-				if (i == listPiecePos[j].pos.y && casillaInicial.x == listPiecePos[j].pos.x && listPiecePos[j].active)
-				{
-					return true;
-				}
-			}
-		}
+			int step = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
 
-		break;
+			for (int i = casillaInicial.y + step; i != casillaFinal.y; i += step) 
+			{
+				for (size_t j = 0; j < listPiecePos.size(); j++) 
+				{
+					if (listPiecePos[j].active && listPiecePos[j].pos.y == i && listPiecePos[j].pos.x == casillaInicial.x) 
+					{
+						return true;
+					}
+				}
+			}
+		}
 	}
-	
-		
-	
+
+	if (pieza == WHITE_BISHOP || pieza == BLACK_BISHOP || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN)
+	{
+		//Para que el movimiento sea valido, incrementoX = incrementoY (movimiento diagonal)
+		int incrementoX = ((casillaFinal.x - casillaInicial.x) < 0) ? (casillaFinal.x - casillaInicial.x) * (-1) : (casillaFinal.x - casillaInicial.x);
+		int incrementoY = ((casillaFinal.y - casillaInicial.y) < 0) ? (casillaFinal.y - casillaInicial.y) * (-1) : (casillaFinal.y - casillaInicial.y);
+
+		if (incrementoX == incrementoY && incrementoX > 0)
+		{
+			int stepX = (casillaFinal.x > casillaInicial.x) ? 1 : -1, stepY = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
+
+			for (int i = 0; i < incrementoX; i++)
+			{
+				for ( size_t j = 0; j < listPiecePos.size(); j++)
+				{
+					if (listPiecePos[j].active && listPiecePos[j].pos.x == casillaInicial.x + (i * stepX) && listPiecePos[j].pos.y == casillaInicial.y + (i * stepY))
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
 
 	return false;
 	
@@ -130,15 +135,19 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 	{
 		movimientoValido = true;
 
-		std::cin >> x >> y;
+		do
+		{
+			std::cin >> x >> y;
 
-		//Validarsi estadentro del tablero
+			x = 8 - x;
+			y -= 1;
 
-		x = 8 - x;
-		y -= 1;
-
-
-		//Despues de validacion de x e y
+			if (!(x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE))
+			{
+				std::cout << "Esa casilla no existe en el tablero, selecciona una entre (1-8, 1-8): ";
+			}
+		} while (!(x >= 0 && x < BOARD_SIZE && y >= 0 && y < BOARD_SIZE));
+		
 
 		Position casillaFinal = { x,y };
 
@@ -172,12 +181,6 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 			std::cout << "No puedes mover ahi!" << std::endl;
 			continue;
 		}
-
-
-
-		
-
-
 
 
 		if (listPiecePos[idPieza].piece == BLACK_PAWN)
