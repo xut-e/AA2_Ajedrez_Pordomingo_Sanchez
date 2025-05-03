@@ -5,11 +5,9 @@
 #include "Play.h"
 #include "comprobaciones.h"
 
-void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido) {
+void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido, Position& casillaFinal, bool& comer) {
 
-	bool comer = false;
-
-	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido);
+	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido, casillaFinal);
 
 }
 
@@ -51,7 +49,9 @@ bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& lis
 
 	int minimoRango, maximoRango, opcionElegida, x, y, idPieza;
 
-	bool movimientoValido = false;
+	bool movimientoValido = false, comer = false;
+
+	Position casillaFinal;
 
 choosePiece:
 
@@ -62,11 +62,15 @@ choosePiece:
 	{
 		minimoRango = 16;
 		maximoRango = 31;
+
+		idPieza = 15;
 	}
 	else
 	{
 		minimoRango = 0;
 		maximoRango = 15;
+
+		idPieza = 16;
 	}
 
 	do
@@ -95,12 +99,30 @@ choosePiece:
 	
 	if (menuMovimiento())
 	{
-		movimiento(listPiecePos, idPieza, jugador, movimientoValido);
+		movimiento(listPiecePos, idPieza, jugador, movimientoValido, casillaFinal, comer);
+
 		if (!movimientoValido)
 		{
-			std::cout << "No puedes mover ahi." << std::endl;
+			std::cout << "No puedes mover ahi!" << std::endl;
 			Sleep(1500);
 			goto choosePiece;
+		}
+		else
+		{
+			if (comer)
+			{
+				for (size_t i = 0; i < listPiecePos.size(); i++)
+				{
+					if (casillaFinal.x == listPiecePos[i].pos.x && casillaFinal.y == listPiecePos[i].pos.y)
+					{
+						listPiecePos[i].active = false;
+						break;
+					}
+				}
+			}
+			cambiarPosicion(idPieza, casillaFinal, listPiecePos);
+			listPiecePos[idPieza].moved = true;
+			
 		}
 		return true;
 	}

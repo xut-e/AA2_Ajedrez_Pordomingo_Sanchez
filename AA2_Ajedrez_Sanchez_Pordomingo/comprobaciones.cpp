@@ -5,11 +5,12 @@
 #include "Play.h"
 #include "moves.h"
 
+//A casi toda esta función me ha ayudado la IA, mis implementaciones no funcionaban bien siempre, pero entiendo perfectamente lo que está haciendo y el uso de operadores ternarios
 bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos, bool comer, bool salidaMaxima) {
 
 	if (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN || ((pieza == WHITE_PAWN || pieza == BLACK_PAWN) && !comer && salidaMaxima))
 	{
-		// Movimiento vertical (misma columna)
+
 		if (casillaInicial.y == casillaFinal.y) 
 		{
 			int step = (casillaFinal.x > casillaInicial.x) ? 1 : -1;
@@ -25,7 +26,7 @@ bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std
 				}
 			}
 		}
-		// Movimiento horizontal (misma fila)
+
 		else if (casillaInicial.x == casillaFinal.x) 
 		{
 			int step = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
@@ -45,19 +46,20 @@ bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std
 
 	if (pieza == WHITE_BISHOP || pieza == BLACK_BISHOP || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN)
 	{
-		//Para que el movimiento sea valido, incrementoX = incrementoY (movimiento diagonal)
-		int incrementoX = ((casillaFinal.x - casillaInicial.x) < 0) ? (casillaFinal.x - casillaInicial.x) * (-1) : (casillaFinal.x - casillaInicial.x);
-		int incrementoY = ((casillaFinal.y - casillaInicial.y) < 0) ? (casillaFinal.y - casillaInicial.y) * (-1) : (casillaFinal.y - casillaInicial.y);
+		int deltaX = abs(casillaFinal.x - casillaInicial.x), deltaY = abs(casillaFinal.y - casillaInicial.y);
 
-		if (incrementoX == incrementoY && incrementoX > 0)
+		if (deltaX == deltaY && deltaX > 0)
 		{
 			int stepX = (casillaFinal.x > casillaInicial.x) ? 1 : -1, stepY = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
 
-			for (int i = 0; i < incrementoX; i++)
+			for (int i = 1; i < deltaX; i++)
 			{
-				for ( size_t j = 0; j < listPiecePos.size(); j++)
+				int checkX = casillaInicial.x + i * stepX;
+				int checkY = casillaInicial.y + i * stepY;
+
+				for (size_t j = 0; j < listPiecePos.size(); j++)
 				{
-					if (listPiecePos[j].active && listPiecePos[j].pos.x == casillaInicial.x + (i * stepX) && listPiecePos[j].pos.y == casillaInicial.y + (i * stepY))
+					if (listPiecePos[j].active && listPiecePos[j].pos.x == checkX && listPiecePos[j].pos.y == checkY)
 					{
 						return true;
 					}
@@ -122,13 +124,13 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 	return false;
 }
 
-void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido) {
+//Las comprobaciones referentes a los peones y al alfil me ha ayudado la IA. Estoy pensando si cambiar el resto para hacerlo más limpio, me he fijado que en vez de usar ifs camba movimientoValido por la comparación, lo que obtiene el mismo resultado más limpio.
+void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido, Position& casillaFinal) {
 	
 	int idPiezaComida, x, y;
 	bool salidaMaxima = false;
 
 	Position casillaInicial = { listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y };
-	Position casillaFinal;
 	
 	
 	std::cout << "Introduce la casilla a la que moveras (fila y columna): ";
@@ -178,93 +180,69 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 			}
 		}
 
-		if (!movimientoValido)
+		if (movimientoValido)
 		{
-			std::cout << "No puedes mover ahi!" << std::endl;
-			
-		}
-		else
-		{
-			if ((listPiecePos[idPieza].piece == WHITE_PAWN || listPiecePos[idPieza].piece == BLACK_PAWN) && !listPiecePos[idPieza].moved)
-			{
-				salidaMaxima = true;
-			}
-
-			if (listPiecePos[idPieza].piece == BLACK_PAWN)
-			{
-				if (comer)
+			if (listPiecePos[idPieza].piece == BLACK_PAWN) {
+				if (comer) 
 				{
-					if ((x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)))
-					{
-						movimientoValido = true;
-					}
+					// Captura en diagonal (1 casilla)
+					movimientoValido = ((x == casillaInicial.x + 1) && (abs(y - casillaInicial.y) == 1));
 				}
-				else
-				{
-					if (salidaMaxima && !comer)
+				else {
+					// Movimiento hacia adelante
+					if (x == casillaInicial.x + 1 && y == casillaInicial.y) 
 					{
-						if (x == listPiecePos[idPieza].pos.x + 2 && y == listPiecePos[idPieza].pos.y && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-						{
-							movimientoValido = true;
-						}
+						movimientoValido = !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima);
 					}
-
-					if ((x == listPiecePos[idPieza].pos.x + 1 && y == listPiecePos[idPieza].pos.y) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+					// Movimiento inicial de 2 casillas
+					else if (casillaInicial.x == 1 && x == casillaInicial.x + 2 && y == casillaInicial.y) 
 					{
-						movimientoValido = true;
+						movimientoValido = !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima);
 					}
-					else if ((listPiecePos[idPieza].pos.x == 1) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-					{
-						if (x == listPiecePos[idPieza].pos.x + 2 && y == listPiecePos[idPieza].pos.y)
-						{
-							movimientoValido = true;
-						}
-					}
-					else
+					else 
 					{
 						movimientoValido = false;
 					}
 				}
-				
-
 			}
-			else if (listPiecePos[idPieza].piece == WHITE_PAWN)
-			{
-				if (comer)
+			// Movimiento de peón blanco (similar pero en dirección opuesta)
+			else if (listPiecePos[idPieza].piece == WHITE_PAWN) {
+				if (comer) 
 				{
-					if (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1))
-					{
-						movimientoValido = true;
-					}
+					movimientoValido = (x == casillaInicial.x - 1) && (abs(y - casillaInicial.y) == 1);
 				}
-				else
+				else 
 				{
-					if (salidaMaxima && !comer)
+					if (x == casillaInicial.x - 1 && y == casillaInicial.y) 
 					{
-						if (x == listPiecePos[idPieza].pos.x - 2 && y == listPiecePos[idPieza].pos.y && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-						{
-							movimientoValido = true;
-						}
+						movimientoValido = !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima);
 					}
-
-					if (((x == listPiecePos[idPieza].pos.x - 1 && y == listPiecePos[idPieza].pos.y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+					else if (casillaInicial.x == 6 && x == casillaInicial.x - 2 && y == casillaInicial.y) 
 					{
-						movimientoValido = true;
+						movimientoValido = !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima);
 					}
-					else if ((listPiecePos[idPieza].pos.x == 6) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-					{
-						if (x == listPiecePos[idPieza].pos.x - 2 && y == listPiecePos[idPieza].pos.y)
-						{
-							movimientoValido = true;
-						}
-					}
-					else
+					else 
 					{
 						movimientoValido = false;
 					}
 				}
-				
 			}
+			// Movimiento del alfil
+			else if (listPiecePos[idPieza].piece == BLACK_BISHOP || listPiecePos[idPieza].piece == WHITE_BISHOP)
+			{
+				int deltaX = abs(x - casillaInicial.x);
+				int deltaY = abs(y - casillaInicial.y);
+
+				if (deltaX == deltaY && deltaX > 0)
+				{
+					movimientoValido = (deltaX == deltaY && deltaX > 0) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima);
+				}
+				else
+				{
+					movimientoValido = false;
+				}
+			}
+
 			else if (listPiecePos[idPieza].piece == BLACK_ROOK || listPiecePos[idPieza].piece == WHITE_ROOK)
 			{
 				if (((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
@@ -279,17 +257,6 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 			else if (listPiecePos[idPieza].piece == BLACK_KNIGHT || listPiecePos[idPieza].piece == WHITE_KNIGHT)
 			{
 				if ((x == listPiecePos[idPieza].pos.x + 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x - 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)) || (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)))
-				{
-					movimientoValido = true;
-				}
-				else
-				{
-					movimientoValido = false;
-				}
-			}
-			else if (listPiecePos[idPieza].piece == BLACK_BISHOP || listPiecePos[idPieza].piece == WHITE_BISHOP)
-			{
-				if (((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
 				{
 					movimientoValido = true;
 				}
@@ -329,6 +296,4 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 
 	} while (!movimientoValido);
 
-	cambiarPosicion(idPieza, casillaFinal, listPiecePos);
-	
 }
