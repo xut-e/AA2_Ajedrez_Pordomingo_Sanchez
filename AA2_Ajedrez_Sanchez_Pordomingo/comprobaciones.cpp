@@ -100,6 +100,39 @@ bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vecto
 	return false;
 }
 
+bool coronacion(std::vector<Pieces>& listPiecePos, int jugador, int& idPieza) {
+	
+	
+	if (jugador == JUGADOR1)
+	{
+		for (int i = 16; i <= 31; i++)
+		{
+			if (listPiecePos[i].piece == WHITE_PAWN && listPiecePos[i].active && listPiecePos[i].pos.x == 0)
+			{
+				idPieza = i;
+				return true;
+			}
+		}
+	}
+	else
+	{
+		if (jugador == JUGADOR2)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				if (listPiecePos[i].piece == BLACK_PAWN && listPiecePos[i].active && listPiecePos[i].pos.x == 7)
+				{
+					idPieza = i;
+					return true;
+				}
+			}
+		}
+	}
+	
+	
+	return false;
+}
+
 bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector<Pieces>& listPiecePos, int jugadorAtacante) {
 	
 	int step = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
@@ -157,14 +190,13 @@ bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaAComprobar
 	}
 }
 
-bool comprobarJaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
-	return false;
-}
-
 bool comprobarJaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
+bool comprobarJaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
+	return false;
+}
 
 bool comprobarTablas(std::vector<Pieces> listPiecesPos, int jugador) {
 	return false;
@@ -355,7 +387,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 				{
 					movimientoValido = true;
 				}
-				else if (!listPiecePos[idPieza].moved)
+				else if (!listPiecePos[idPieza].moved && !comprobarJaque(listPiecePos, jugador))
 				{
 					if (listPiecePos[idPieza].pos.x == x)
 					{

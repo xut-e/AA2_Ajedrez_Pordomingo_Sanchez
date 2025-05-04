@@ -19,3 +19,5 @@ bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vecto
 bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaObjetivo, std::vector<Pieces>& listPiecePos);
 
 bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector<Pieces>& listPiecePos, int jugadorAtacante);
+
+bool coronacion(std::vector<Pieces>& listPiecePos, int jugador, int& idPieza);

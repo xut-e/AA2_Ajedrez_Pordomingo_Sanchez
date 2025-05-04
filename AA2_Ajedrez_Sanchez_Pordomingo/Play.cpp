@@ -24,7 +24,7 @@ void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SI
 void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecesPos) {
 	
 	bool checkmate = false, rendicion = false, tablas = false;
-	int ganador;
+	int ganador, idPieza;
 	char opcionElegida, opcionRendicion, opcionTablas;
 	
 	while (true)
@@ -50,7 +50,23 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				{
 					if (movePiece(chessboard, listPiecesPos, i))
 					{
+						if (coronacion(listPiecesPos, i, idPieza))
+						{
+							char opcionCoronacion;
+							std::cout << std::endl << "\tB) Alfil.\n\tH) Caballo\n\tR) Torre\n\tQ) Dama\n\n" << "Has coronado un peon, elige en que pieza transformarlo:";
 
+							do
+							{
+								std::cin >> opcionCoronacion;
+
+								if (opcionCoronacion != 'B' && opcionCoronacion != 'H' && opcionCoronacion != 'R' && opcionCoronacion != 'Q')
+								{
+									std::cout << "Selecciona una opcion valida:" << std::endl;
+								}
+							} while (opcionCoronacion != 'B' && opcionCoronacion != 'H' && opcionCoronacion != 'R' && opcionCoronacion != 'Q');
+
+							cambiarPieza(listPiecesPos, idPieza, opcionCoronacion);
+						}
 					}
 					else
 					{
@@ -102,6 +118,8 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				}
 
 			} while (opcionElegida != '1' && movePiece(chessboard, listPiecesPos, i));
+
+			
 
 			if (rendicion)
 			{

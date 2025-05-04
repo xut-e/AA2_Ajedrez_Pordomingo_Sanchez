@@ -11,6 +11,11 @@ void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, boo
 
 }
 
+void cambiarPieza(std::vector<Pieces>& listPiecePos, int idPieza, char piezaElegida) {
+	
+	listPiecePos[idPieza].piece = piezaElegida;
+}
+
 void cambiarPosicion(int idPieza, Position casillaFinal, std::vector<Pieces>& listPiecePos, bool& enroque) {
 	int torre;
 	
