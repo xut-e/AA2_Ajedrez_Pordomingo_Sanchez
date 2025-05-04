@@ -4,11 +4,12 @@
 #include "init.h"
 #include "Play.h"
 #include "moves.h"
+#include "comprobaciones.h"
 
 //A casi toda esta función me ha ayudado la IA, mis implementaciones no funcionaban bien siempre, pero entiendo perfectamente lo que está haciendo y el uso de operadores ternarios
 bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos, bool comer, bool salidaMaxima) {
 
-	if (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN || ((pieza == WHITE_PAWN || pieza == BLACK_PAWN) && !comer && salidaMaxima))
+	if (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN || ((pieza == WHITE_PAWN || pieza == BLACK_PAWN) && !comer && salidaMaxima) || (pieza == BLACK_KING || pieza == WHITE_KING))
 	{
 
 		if (casillaInicial.y == casillaFinal.y) 
@@ -72,18 +73,130 @@ bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std
 	
 }
 
-bool casillaAtacada(int x, int y) {
+bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vector<Pieces> listPiecePos)
+{
+	Position rango;
+
+	if (jugadorAtacante == JUGADOR1) {
+		rango.x = 16;
+		rango.y = 31;
+	}
+	else {
+		rango.x = 0;
+		rango.y = 15;
+	}
+
+	for (int i = rango.x; i <= rango.y; i++) {
+		if (listPiecePos[i].active) {
+			Position posPieza = listPiecePos[i].pos;
+			char tipoPieza = listPiecePos[i].piece;
+
+			if (puedeAtacar(posPieza, tipoPieza, casillaAComprobar, listPiecePos)) {
+				return true;
+			}
+		}
+	}
+
 	return false;
 }
 
-bool comprobarJaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
+bool coronacion(std::vector<Pieces>& listPiecePos, int jugador, int& idPieza) {
+	
+	
+	if (jugador == JUGADOR1)
+	{
+		for (int i = 16; i <= 31; i++)
+		{
+			if (listPiecePos[i].piece == WHITE_PAWN && listPiecePos[i].active && listPiecePos[i].pos.x == 0)
+			{
+				idPieza = i;
+				return true;
+			}
+		}
+	}
+	else
+	{
+		if (jugador == JUGADOR2)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				if (listPiecePos[i].piece == BLACK_PAWN && listPiecePos[i].active && listPiecePos[i].pos.x == 7)
+				{
+					idPieza = i;
+					return true;
+				}
+			}
+		}
+	}
+	
+	
 	return false;
+}
+
+bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector<Pieces>& listPiecePos, int jugadorAtacante) {
+	
+	int step = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
+
+	Position casillaActual;
+
+	casillaActual.x = casillaInicial.x;
+
+	for (int i = casillaInicial.y; i <= casillaFinal.y; i += step)
+	{
+		casillaActual.y = i;
+
+		if (casillaAtacada(casillaActual, jugadorAtacante, listPiecePos))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+//IA
+bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaAComprobar, std::vector<Pieces>& listPiecePos) 
+{
+	int dx = abs(casillaAComprobar.x - posPieza.x), dy = abs(casillaAComprobar.y - posPieza.y);
+
+	switch (toupper(tipoPieza)) {
+	case 'P':
+		if (tipoPieza == BLACK_PAWN) {
+			return (casillaAComprobar.x == posPieza.x + 1 && dy == 1);
+		}
+		else {
+			return (casillaAComprobar.x == posPieza.x - 1 && dy == 1);
+		}
+
+	case 'T':
+		return ((posPieza.x == casillaAComprobar.x || posPieza.y == casillaAComprobar.y) &&
+			!piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false));
+
+	case 'H':
+		return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
+
+	case 'B': 
+		return (dx == dy) && dx > 0 &&
+			!piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false);
+
+	case 'Q': 
+		return ((posPieza.x == casillaAComprobar.x || posPieza.y == casillaAComprobar.y || dx == dy) &&
+			!piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false));
+
+	case 'K': 
+		return dx <= 1 && dy <= 1;
+
+	default:
+		return false;
+	}
 }
 
 bool comprobarJaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
+bool comprobarJaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
+	return false;
+}
 
 bool comprobarTablas(std::vector<Pieces> listPiecesPos, int jugador) {
 	return false;
@@ -125,12 +238,13 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 }
 
 //Las comprobaciones referentes a los peones y al alfil me ha ayudado la IA. Estoy pensando si cambiar el resto para hacerlo más limpio, me he fijado que en vez de usar ifs camba movimientoValido por la comparación, lo que obtiene el mismo resultado más limpio.
-void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido, Position& casillaFinal) {
+void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido, Position& casillaFinal, bool& enroque) {
 	
 	int idPiezaComida, x, y;
 	bool salidaMaxima = false;
+	comer = false;
 
-	Position casillaInicial = { listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y };
+	Position casillaInicial = { listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y }, casillaFinalEnroque;
 	
 	
 	std::cout << "Introduce la casilla a la que moveras (fila y columna): ";
@@ -179,6 +293,8 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 				movimientoValido = false;
 			}
 		}
+
+		int jugadorAtacante = (jugador == JUGADOR1) ? JUGADOR2 : JUGADOR1;
 
 		if (movimientoValido)
 		{
@@ -267,9 +383,65 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 			}
 			else if (listPiecePos[idPieza].piece == BLACK_KING || listPiecePos[idPieza].piece == WHITE_KING)
 			{
-				if ((((x == listPiecePos[idPieza].pos.x || x == listPiecePos[idPieza].pos.x - 1 || x == listPiecePos[idPieza].pos.x + 1) && (y == listPiecePos[idPieza].pos.y || y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !(x == listPiecePos[idPieza].pos.x && y == listPiecePos[idPieza].pos.y) && !casillaAtacada(x, y)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+				if ((((x == listPiecePos[idPieza].pos.x || x == listPiecePos[idPieza].pos.x - 1 || x == listPiecePos[idPieza].pos.x + 1) && (y == listPiecePos[idPieza].pos.y || y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !(x == listPiecePos[idPieza].pos.x && y == listPiecePos[idPieza].pos.y) && !casillaAtacada(casillaFinal, jugadorAtacante, listPiecePos)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
 				{
 					movimientoValido = true;
+				}
+				else if (!listPiecePos[idPieza].moved && !comprobarJaque(listPiecePos, jugador))
+				{
+					if (listPiecePos[idPieza].pos.x == x)
+					{
+						if (listPiecePos[idPieza].pos.y - 2 == y)
+						{
+							if (jugador == JUGADOR1)
+							{
+								casillaFinalEnroque = { 7,0 };
+							}
+							else
+							{
+								casillaFinalEnroque = { 0,0 };
+							}
+
+							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante))
+							{
+								movimientoValido = true;
+								enroque = true;
+							}
+							else
+							{
+								movimientoValido = false;
+							}
+						}
+						else if (listPiecePos[idPieza].pos.y + 2 == y)
+						{
+							if (jugador == JUGADOR1)
+							{
+								casillaFinalEnroque = { 7,7 };
+							}
+							else
+							{
+								casillaFinalEnroque = { 0,7 };
+							}
+
+							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante))
+							{
+								movimientoValido = true;
+								enroque = true;
+							}
+							else
+							{
+								movimientoValido = false;
+							}
+						}
+						else
+						{
+							movimientoValido = false;
+						}
+					}
+					else
+					{
+						movimientoValido = false;
+					}
 				}
 				else
 				{

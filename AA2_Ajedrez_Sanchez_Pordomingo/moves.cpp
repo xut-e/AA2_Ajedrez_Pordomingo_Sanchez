@@ -5,13 +5,52 @@
 #include "Play.h"
 #include "comprobaciones.h"
 
-void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido, Position& casillaFinal, bool& comer) {
+void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido, Position& casillaFinal, bool& comer, bool& enroque) {
 
-	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido, casillaFinal);
+	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido, casillaFinal, enroque);
 
 }
 
-void cambiarPosicion(int idPieza, Position casillaFinal, std::vector<Pieces>& listPiecePos) {
+void cambiarPieza(std::vector<Pieces>& listPiecePos, int idPieza, char piezaElegida) {
+	
+	listPiecePos[idPieza].piece = piezaElegida;
+}
+
+void cambiarPosicion(int idPieza, Position casillaFinal, std::vector<Pieces>& listPiecePos, bool& enroque) {
+	int torre;
+	
+	if (enroque)
+	{
+		if (idPieza >= 16 && casillaFinal.y < listPiecePos[idPieza].pos.y)
+		{
+			torre = 16;
+		}
+		else if (idPieza >= 16 && casillaFinal.y > listPiecePos[idPieza].pos.y)
+		{
+			torre = 23;
+		}
+		else if (idPieza < 16 && casillaFinal.y < listPiecePos[idPieza].pos.y)
+		{
+			torre = 0;
+		}
+		else
+		{
+			torre = 7;
+		}
+
+
+
+		if (torre == 16 || torre == 0)
+		{
+			listPiecePos[torre].pos.y = casillaFinal.y + 1;
+		}
+		else if (torre == 23 || torre == 7)
+		{
+			listPiecePos[torre].pos.y = casillaFinal.y - 1;
+		}
+	}
+
+
 	listPiecePos[idPieza].pos.x = casillaFinal.x;
 	listPiecePos[idPieza].pos.y = casillaFinal.y;
 }
@@ -49,7 +88,7 @@ bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& lis
 
 	int minimoRango, maximoRango, opcionElegida, x, y, idPieza;
 
-	bool movimientoValido = false, comer = false;
+	bool movimientoValido = false, comer = false, enroque = false;
 
 	Position casillaFinal;
 
@@ -99,7 +138,7 @@ choosePiece:
 	
 	if (menuMovimiento())
 	{
-		movimiento(listPiecePos, idPieza, jugador, movimientoValido, casillaFinal, comer);
+		movimiento(listPiecePos, idPieza, jugador, movimientoValido, casillaFinal, comer, enroque);
 
 		if (!movimientoValido)
 		{
@@ -120,7 +159,7 @@ choosePiece:
 					}
 				}
 			}
-			cambiarPosicion(idPieza, casillaFinal, listPiecePos);
+			cambiarPosicion(idPieza, casillaFinal, listPiecePos, enroque);
 			listPiecePos[idPieza].moved = true;
 			
 		}
