@@ -76,6 +76,7 @@ bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std
 bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vector<Pieces> listPiecePos)
 {
 	Position rango;
+
 	if (jugadorAtacante == JUGADOR1) {
 		rango.x = 16;
 		rango.y = 31;
@@ -99,6 +100,27 @@ bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vecto
 	return false;
 }
 
+bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector<Pieces>& listPiecePos, int jugadorAtacante) {
+	
+	int step = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
+
+	Position casillaActual;
+
+	casillaActual.x = casillaInicial.x;
+
+	for (int i = casillaInicial.y; i <= casillaFinal.y; i += step)
+	{
+		casillaActual.y = i;
+
+		if (casillaAtacada(casillaActual, jugadorAtacante, listPiecePos))
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+//IA
 bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaAComprobar, std::vector<Pieces>& listPiecePos) 
 {
 	int dx = abs(casillaAComprobar.x - posPieza.x), dy = abs(casillaAComprobar.y - posPieza.y);
@@ -348,10 +370,14 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 								casillaFinalEnroque = { 0,0 };
 							}
 
-							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante))
 							{
 								movimientoValido = true;
 								enroque = true;
+							}
+							else
+							{
+								movimientoValido = false;
 							}
 						}
 						else if (listPiecePos[idPieza].pos.y + 2 == y)
@@ -365,10 +391,14 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 								casillaFinalEnroque = { 0,7 };
 							}
 
-							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
+							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante))
 							{
 								movimientoValido = true;
 								enroque = true;
+							}
+							else
+							{
+								movimientoValido = false;
 							}
 						}
 						else
@@ -407,51 +437,3 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 	} while (!movimientoValido);
 
 }
-
-
-
-
-/*
-
-if (listPiecePos[idPieza].pos.y - 2 == y)
-						{
-							casillaFinalEnroque.x = casillaFinal.x;
-							casillaFinalEnroque.y = casillaFinal.y - 2;
-
-							if (jugador == JUGADOR2 && listPiecePos[0].active && !listPiecePos[0].moved && !piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-							{
-								movimientoValido = true;
-
-								enroque = true;
-							}
-							else if (jugador == JUGADOR1 && listPiecePos[16].active && !listPiecePos[16].moved && !piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-							{
-								movimientoValido = true;
-
-								enroque = true;
-							}
-						}
-						else if (listPiecePos[idPieza].pos.y + 2 == y)
-						{
-							casillaFinalEnroque.x = casillaFinal.x;
-							casillaFinalEnroque.y = casillaFinal.y + 1;
-
-							if (jugador == JUGADOR2 && listPiecePos[7].active && !listPiecePos[7].moved && !piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-							{
-								movimientoValido = true;
-
-								enroque = true;
-							}
-							else if (jugador == JUGADOR1 && listPiecePos[23].active && !listPiecePos[23].moved && !piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
-							{
-								movimientoValido = true;
-
-								enroque = true;
-							}
-						}
-						else
-						{
-							movimientoValido = false;
-						}
-
-*/

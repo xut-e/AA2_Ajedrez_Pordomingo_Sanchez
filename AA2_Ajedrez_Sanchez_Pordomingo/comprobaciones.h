@@ -17,3 +17,5 @@ bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza, st
 bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vector<Pieces> listPiecePos);
 
 bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaObjetivo, std::vector<Pieces>& listPiecePos);
+
+bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector<Pieces>& listPiecePos, int jugadorAtacante);
