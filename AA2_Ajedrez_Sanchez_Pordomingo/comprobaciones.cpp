@@ -225,7 +225,45 @@ bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
+bool tablasPorAhogado() {
+	return false;
+}
+
+bool tablasPorFaltadeMaterial() {
+	return false;
+}
+
+bool tablasPorRepeticion() {
+	return false;
+}
+
+bool tablasPor50Movimientos() {
+	return false;
+}
+
 bool tablas(std::vector<Pieces> listPiecesPos, int jugador) {
+	
+	if (tablasPorAhogado())
+	{
+		return true;
+	}
+	else if (tablasPorFaltadeMaterial())
+	{
+		return true;
+	}
+	else if (tablasPorRepeticion())
+	{
+		return true;
+	}
+	else if (tablasPor50Movimientos())
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
 	return false;
 }
 

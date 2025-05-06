@@ -133,7 +133,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 					goto start;
 				}
 
-				if (checkmate || rendicion || tablas)
+				if (checkmate || rendicion || hayTablas)
 				{
 					break;
 				}
@@ -148,7 +148,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				break;
 			}
 
-			if (tablas)
+			if (hayTablas)
 			{
 				ganador = TABLAS;
 				break;
@@ -172,7 +172,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 			}
 		}
 
-		if (checkmate || rendicion || tablas)
+		if (checkmate || rendicion || hayTablas)
 		{
 			break;
 		}
