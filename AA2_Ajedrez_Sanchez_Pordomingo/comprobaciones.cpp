@@ -168,19 +168,16 @@ bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaAComprobar
 		}
 
 	case 'T':
-		return ((posPieza.x == casillaAComprobar.x || posPieza.y == casillaAComprobar.y) &&
-			!piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false));
+		return ((posPieza.x == casillaAComprobar.x || posPieza.y == casillaAComprobar.y) && !piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false));
 
 	case 'H':
 		return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
 
 	case 'B': 
-		return (dx == dy) && dx > 0 &&
-			!piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false);
+		return (dx == dy) && dx > 0 && !piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false);
 
 	case 'Q': 
-		return ((posPieza.x == casillaAComprobar.x || posPieza.y == casillaAComprobar.y || dx == dy) &&
-			!piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false));
+		return ((posPieza.x == casillaAComprobar.x || posPieza.y == casillaAComprobar.y || dx == dy) && !piezaEnMedio(posPieza, casillaAComprobar, tipoPieza, listPiecePos, true, false));
 
 	case 'K': 
 		return dx <= 1 && dy <= 1;
@@ -190,15 +187,45 @@ bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaAComprobar
 	}
 }
 
-bool comprobarJaque(std::vector<Pieces>& listPiecesPos, int jugador) {
+bool jaque(std::vector<Pieces>& listPiecesPos, int jugador) {
+
+	int jugadorAtacante = (jugador == JUGADOR1) ? JUGADOR2 : JUGADOR1;
+
+	Position bk = listPiecesPos[4].pos, wk = listPiecesPos[19].pos;
+
+	if (jugador == JUGADOR1)
+	{
+		if (casillaAtacada(wk, jugadorAtacante, listPiecesPos))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		if (casillaAtacada(bk, jugadorAtacante, listPiecesPos))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+
+
 	return false;
 }
 
-bool comprobarJaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
+bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
-bool comprobarTablas(std::vector<Pieces> listPiecesPos, int jugador) {
+bool tablas(std::vector<Pieces> listPiecesPos, int jugador) {
 	return false;
 }
 
@@ -240,8 +267,8 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 //Las comprobaciones referentes a los peones y al alfil me ha ayudado la IA. Estoy pensando si cambiar el resto para hacerlo más limpio, me he fijado que en vez de usar ifs camba movimientoValido por la comparación, lo que obtiene el mismo resultado más limpio.
 void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido, Position& casillaFinal, bool& enroque) {
 	
-	int idPiezaComida, x, y;
-	bool salidaMaxima = false;
+	int idPiezaComida, x, y, tij2 = 0, tdj2 = 7, tij1 = 16,tdj1 = 23;
+	bool salidaMaxima = false, torreMovida = true;
 	comer = false;
 
 	Position casillaInicial = { listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y }, casillaFinalEnroque;
@@ -387,22 +414,30 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 				{
 					movimientoValido = true;
 				}
-				else if (!listPiecePos[idPieza].moved && !comprobarJaque(listPiecePos, jugador))
+				else if (!listPiecePos[idPieza].moved && !jaque(listPiecePos, jugador))
 				{
 					if (listPiecePos[idPieza].pos.x == x)
 					{
 						if (listPiecePos[idPieza].pos.y - 2 == y)
 						{
-							if (jugador == JUGADOR1)
+							if (!listPiecePos[tij2].moved && jugador == JUGADOR2)
+							{
+								casillaFinalEnroque = { 0,0 };
+								torreMovida = false;
+							}
+							else if (!listPiecePos[tij1].moved && jugador == JUGADOR1)
 							{
 								casillaFinalEnroque = { 7,0 };
+								torreMovida = false;
 							}
 							else
 							{
-								casillaFinalEnroque = { 0,0 };
+								movimientoValido = false;
+								casillaFinalEnroque = {};
+
 							}
 
-							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante))
+							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante) && !torreMovida)
 							{
 								movimientoValido = true;
 								enroque = true;
@@ -414,16 +449,23 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 						}
 						else if (listPiecePos[idPieza].pos.y + 2 == y)
 						{
-							if (jugador == JUGADOR1)
+							if (!listPiecePos[tdj1].moved && jugador == JUGADOR1)
 							{
 								casillaFinalEnroque = { 7,7 };
+								torreMovida = false;
+							}
+							else if (!listPiecePos[tdj2].moved && jugador == JUGADOR2)
+							{
+								casillaFinalEnroque = { 0,7 };
+								torreMovida = false;
 							}
 							else
 							{
-								casillaFinalEnroque = { 0,7 };
+								movimientoValido = false;
+								casillaFinalEnroque = {};
 							}
 
-							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante))
+							if (!piezaEnMedio(casillaInicial, casillaFinalEnroque, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima) && caminoDespejado(casillaInicial, casillaFinal, listPiecePos, jugadorAtacante) && !torreMovida)
 							{
 								movimientoValido = true;
 								enroque = true;

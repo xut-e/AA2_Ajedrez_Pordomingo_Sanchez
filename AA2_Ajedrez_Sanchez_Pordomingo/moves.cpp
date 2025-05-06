@@ -159,7 +159,20 @@ choosePiece:
 					}
 				}
 			}
+
+			Position casillaInicial = listPiecePos[idPieza].pos;
+
+
 			cambiarPosicion(idPieza, casillaFinal, listPiecePos, enroque);
+
+			if (jaque(listPiecePos, jugador))
+			{
+				cambiarPosicion(idPieza, casillaInicial, listPiecePos, enroque);
+				std::cout << "Tu rey no puede estar en Jaque!" << std::endl;
+				Sleep(1500);
+				goto choosePiece;
+			}
+
 			listPiecePos[idPieza].moved = true;
 			
 		}
