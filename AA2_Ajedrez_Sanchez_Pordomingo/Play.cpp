@@ -24,7 +24,7 @@ void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SI
 void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecesPos) {
 	
 	bool checkmate = false, rendicion = false, hayTablas = false;
-	int ganador, idPieza;
+	int ganador, idPieza, contador50Movimientos = 0;
 	char opcionElegida, opcionRendicion, opcionTablas;
 	
 	while (true)
@@ -40,6 +40,11 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				updateChessboard(listPiecesPos, chessboard);
 				viewChessBoard(chessboard);
 
+				if (jaque(listPiecesPos, i))
+				{
+					std::cout << "Jaque!" << std::endl;
+				}
+
 				//Menu que permite al jugador escoger que hacer en su turno
 				std::cout << "Turno de " << ((i == JUGADOR1) ? "blancas." : "negras.") << std::endl;
 
@@ -48,15 +53,12 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 
 				if (opcionElegida == '1')
 				{
-					if (jaque(listPiecesPos, i))
-					{
-						std::cout << "Jaque!" << std::endl;
-					}
-					if (movePiece(chessboard, listPiecesPos, i))
+					if (movePiece(chessboard, listPiecesPos, i, contador50Movimientos))
 					{
 						if (coronacion(listPiecesPos, i, idPieza))
 						{
 							char opcionCoronacion;
+
 							if (i == 0)
 							{
 								std::cout << std::endl << "\tB) Alfil.\n\tH) Caballo\n\tT) Torre\n\tQ) Dama\n\n" << "Has coronado un peon, elige en que pieza transformarlo:";
@@ -138,7 +140,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 					break;
 				}
 
-			} while (opcionElegida != '1' && movePiece(chessboard, listPiecesPos, i));
+			} while (opcionElegida != '1' && movePiece(chessboard, listPiecesPos, i, contador50Movimientos));
 
 			
 
@@ -164,7 +166,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				}
 			}
 
-			if (tablas(listPiecesPos, i))
+			if (tablas(listPiecesPos, i, contador50Movimientos))
 			{
 				hayTablas = true;
 				ganador = TABLAS;

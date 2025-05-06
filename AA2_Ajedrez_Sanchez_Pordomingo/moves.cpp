@@ -5,9 +5,9 @@
 #include "Play.h"
 #include "comprobaciones.h"
 
-void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido, Position& casillaFinal, bool& comer, bool& enroque) {
+void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido, Position& casillaFinal, bool& comer, bool& enroque, int& contador50Movimientos) {
 
-	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido, casillaFinal, enroque);
+	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido, casillaFinal, enroque, contador50Movimientos);
 
 }
 
@@ -84,7 +84,7 @@ bool menuMovimiento() {
 	}
 }
 
-bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador) {
+bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador, int& contador50Movimientos) {
 
 	int minimoRango, maximoRango, opcionElegida, x, y, idPieza;
 
@@ -138,7 +138,7 @@ choosePiece:
 	
 	if (menuMovimiento())
 	{
-		movimiento(listPiecePos, idPieza, jugador, movimientoValido, casillaFinal, comer, enroque);
+		movimiento(listPiecePos, idPieza, jugador, movimientoValido, casillaFinal, comer, enroque, contador50Movimientos);
 
 		if (!movimientoValido)
 		{

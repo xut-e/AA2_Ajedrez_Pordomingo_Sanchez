@@ -225,37 +225,40 @@ bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
-bool tablasPorAhogado() {
+bool tablasPorAhogado(std::vector<Pieces>& listPiecePos, int jugador) {
 	return false;
 }
 
-bool tablasPorFaltadeMaterial() {
+bool tablasPorFaltadeMaterial(std::vector<Pieces> listPiecePos) {
 	return false;
 }
 
-bool tablasPorRepeticion() {
+bool tablasPorRepeticion(std::vector<std::string>& historialPosiciones) {
 	return false;
 }
 
-bool tablasPor50Movimientos() {
-	return false;
+bool tablasPor50Movimientos(int& contador50Movimentos) {
+
+	return (contador50Movimentos >= 50);
 }
 
-bool tablas(std::vector<Pieces> listPiecesPos, int jugador) {
+bool tablas(std::vector<Pieces>& listPiecesPos, int jugador, int& contador50Movimientos) {
 	
-	if (tablasPorAhogado())
+	std::vector<std::string> historialPosiciones;
+
+	if (tablasPorAhogado(listPiecesPos, jugador))
 	{
 		return true;
 	}
-	else if (tablasPorFaltadeMaterial())
+	else if (tablasPorFaltadeMaterial(listPiecesPos))
 	{
 		return true;
 	}
-	else if (tablasPorRepeticion())
+	else if (tablasPorRepeticion(historialPosiciones))
 	{
 		return true;
 	}
-	else if (tablasPor50Movimientos())
+	else if (tablasPor50Movimientos(contador50Movimientos))
 	{
 		return true;
 	}
@@ -303,9 +306,9 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 }
 
 //Las comprobaciones referentes a los peones y al alfil me ha ayudado la IA. Estoy pensando si cambiar el resto para hacerlo más limpio, me he fijado que en vez de usar ifs camba movimientoValido por la comparación, lo que obtiene el mismo resultado más limpio.
-void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido, Position& casillaFinal, bool& enroque) {
+void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& comer, bool& movimientoValido, Position& casillaFinal, bool& enroque, int& contador50Movimientos) {
 	
-	int idPiezaComida, x, y, tij2 = 0, tdj2 = 7, tij1 = 16,tdj1 = 23;
+	int idPiezaComida, x, y, tij2 = 0, tdj2 = 7, tij1 = 16, tdj1 = 23;
 	bool salidaMaxima = false, torreMovida = true;
 	comer = false;
 
@@ -539,6 +542,15 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 					movimientoValido = false;
 				}
 			}
+		}
+
+		if (movimientoValido && ((listPiecePos[idPieza].piece == BLACK_PAWN || listPiecePos[idPieza].piece == WHITE_PAWN) || comer))
+		{
+			contador50Movimientos = 0;
+		}
+		else if (movimientoValido)
+		{
+			contador50Movimientos++;
 		}
 
 		if (!movimientoValido)
