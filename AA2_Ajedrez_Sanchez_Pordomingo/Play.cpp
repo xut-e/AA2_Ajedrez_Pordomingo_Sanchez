@@ -4,6 +4,7 @@
 #include "init.h"
 #include "moves.h"
 #include "comprobaciones.h"
+#include <string>
 
 //Funcion para actualizar el tablero, colocamos las piezas que no han sido capturadas
 void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SIZE][BOARD_SIZE]) {
@@ -20,18 +21,43 @@ void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SI
 
 }
 
+std::string obtenerClaveTablero(std::vector<Pieces>& listPiecePos, int jugador) {
+
+	std::string clave;
+
+	for (int i = 0; i < listPiecePos.size(); i++)
+	{
+		if (listPiecePos[i].active)
+		{
+			clave += (jugador == JUGADOR1) ? "W" : "B";
+			clave += listPiecePos[i].piece;
+			clave += std::to_string(listPiecePos[i].pos.x);
+			clave += std::to_string(listPiecePos[i].pos.y);
+		}
+	}
+
+	return clave;
+}
+
 //Funcion principal del juego
 void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecesPos) {
 	
 	bool checkmate = false, rendicion = false, hayTablas = false;
-	int ganador, idPieza, contador50Movimientos = 0;
+	int ganador, idPieza, contador50Movimientos = 0, tipoTablas = 0;
 	char opcionElegida, opcionRendicion, opcionTablas;
+
+	std::vector<std::string> historialPosiciones;
 	
 	while (true)
 	{
 		//For para los turnos mientras no haya jaque mate o rendicion o tablas
 		for (int i = 0; i < JUGADORES; i++)
 		{
+			//Esta linea es idea de la IA
+			std::string posicionActual = obtenerClaveTablero(listPiecesPos, i);
+
+			historialPosiciones.push_back(posicionActual);
+
 			do
 			{
 			start:
@@ -53,7 +79,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 
 				if (opcionElegida == '1')
 				{
-					if (movePiece(chessboard, listPiecesPos, i, contador50Movimientos))
+					if (movePiece(chessboard, listPiecesPos, i, contador50Movimientos, historialPosiciones))
 					{
 						if (coronacion(listPiecesPos, i, idPieza))
 						{
@@ -140,7 +166,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 					break;
 				}
 
-			} while (opcionElegida != '1' && movePiece(chessboard, listPiecesPos, i, contador50Movimientos));
+			} while (opcionElegida != '1' && movePiece(chessboard, listPiecesPos, i, contador50Movimientos, historialPosiciones));
 
 			
 
@@ -166,7 +192,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				}
 			}
 
-			if (tablas(listPiecesPos, i, contador50Movimientos))
+			if (tablas(listPiecesPos, i, contador50Movimientos, historialPosiciones, tipoTablas))
 			{
 				hayTablas = true;
 				ganador = TABLAS;
@@ -206,6 +232,23 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 	}
 	else if (ganador == TABLAS)
 	{
-		std::cout << "La partida ha quedado en tablas (empate)." << std::endl;
+		std::cout << "La partida ha quedado en tablas (empate). Causa:\n" << std::endl;
+		
+		if (tipoTablas == 1)
+		{
+
+		}
+		else if (tipoTablas == 2)
+		{
+
+		}
+		else if (tipoTablas == 3)
+		{
+
+		}
+		else if (tipoTablas == 4)
+		{
+
+		}
 	}
 }

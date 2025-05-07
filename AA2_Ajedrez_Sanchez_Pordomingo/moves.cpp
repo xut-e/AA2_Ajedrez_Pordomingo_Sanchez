@@ -84,7 +84,7 @@ bool menuMovimiento() {
 	}
 }
 
-bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador, int& contador50Movimientos) {
+bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador, int& contador50Movimientos, std::vector<std::string>& historialPosiciones) {
 
 	int minimoRango, maximoRango, opcionElegida, x, y, idPieza;
 
@@ -174,6 +174,8 @@ choosePiece:
 			}
 
 			listPiecePos[idPieza].moved = true;
+
+
 			
 		}
 		return true;

@@ -133,6 +133,40 @@ bool coronacion(std::vector<Pieces>& listPiecePos, int jugador, int& idPieza) {
 	return false;
 }
 
+//Funcion para comprobar si al jugador le pertenece la pieza que hay en la casilla que ha seleccionado
+bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador, int& idPieza) {
+
+	for (int i = 0; i < TOTAL_PIECES; i++)
+	{
+		Pieces pieza = listPiecePos[i];
+		if (pieza.active && pieza.pos.x == x && pieza.pos.y == y)
+		{
+			idPieza = i;
+
+			if (jugador == JUGADOR1)
+			{
+				if (!(i >= 16 && i <= 31))
+				{
+					std::cout << "Esa pieza no es tuya!" << std::endl;
+				}
+				return (i >= 16 && i <= 31);
+			}
+			else
+			{
+				if (!(i >= 0 && i <= 15))
+				{
+					std::cout << "Esa pieza no es tuya!" << std::endl;
+				}
+				return (i >= 0 && i <= 15);
+			}
+		}
+	}
+
+	std::cout << "No hay ninguna pieza ahi!" << std::endl;
+
+	return false;
+}
+
 bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector<Pieces>& listPiecePos, int jugadorAtacante) {
 	
 	int step = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
@@ -221,19 +255,140 @@ bool jaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
+bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int i) {
+	return true;
+}
+
 bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
+	
+	if (jaque(listPiecesPos, jugador) && !tieneMovimientosLegales(listPiecesPos, jugador))
+	{
+		return true;
+	}
+
 	return false;
 }
 
-bool tablasPorAhogado(std::vector<Pieces>& listPiecePos, int jugador) {
-	return false;
+bool tablasPorAhogado(std::vector<Pieces> listPiecePos, int jugador) {
+	if (jaque(listPiecePos, jugador))
+	{
+		return false;
+	}
+
+	for (int i = 0; i < listPiecePos.size(); i++)
+	{
+		if (listPiecePos[i].active && playerOwnsPiece(listPiecePos[i].pos.x, listPiecePos[i].pos.y, listPiecePos, jugador, i))
+		{
+			if (tieneMovimientosLegales(listPiecePos, i))
+			{
+				return false;
+			}
+		}
+	}
+
+	return true;
 }
 
 bool tablasPorFaltadeMaterial(std::vector<Pieces> listPiecePos) {
+	int piezasBlancas = 0, piezasNegras = 0;
+
+	bool alfilBlanco = false, caballoBlanco = false, alfilNegro = false, caballoNegro = false;
+
+	std::vector<int> alfiles;
+
+	for (int i = 0; i < listPiecePos.size(); i++)
+	{
+		if (listPiecePos[i].active)
+		{
+			char tipo = toupper(listPiecePos[i].piece);
+
+			if (isupper(listPiecePos[i].piece))
+			{
+				piezasBlancas++;
+
+				if (tipo == 'B')
+				{
+					alfilBlanco = true;
+				}
+
+				if (tipo == 'H')
+				{
+					caballoBlanco = true;
+				}
+			}
+			else
+			{
+				piezasNegras++;
+
+				if (tipo == 'B')
+				{
+					alfilNegro = true;
+				}
+
+				if (tipo == 'H')
+				{
+					caballoNegro = true;
+				}
+			}
+
+			if (tipo == 'B')
+			{
+				alfiles.push_back(i);
+			}
+		}
+	}
+
+	//Rey vs Rey
+	if (piezasBlancas == 1 && piezasNegras == 1)
+	{
+		return true;
+	}
+
+	//Rey + alfil vs Rey
+	if ((piezasBlancas == 2 && piezasNegras == 1 && alfilBlanco) || (piezasNegras == 2 && piezasBlancas == 1 && alfilNegro))
+	{
+		return true;
+	}
+
+	//Rey + caballo vs Rey
+	if ((piezasBlancas == 2 && piezasNegras == 1 && caballoBlanco) || (piezasNegras == 2 && piezasBlancas == 1 && caballoNegro))
+	{
+		return true;
+	}
+
+	// Rey + alfil vs Rey + alfil (alfil del mismo color)
+
+	if (piezasBlancas == 2 && piezasNegras == 2 && alfilBlanco && alfilNegro && alfiles.size() == 2)
+	{
+		return (((listPiecePos[alfiles[0]].pos.x + listPiecePos[alfiles[0]].pos.y) % 2) == ((listPiecePos[alfiles[1]].pos.x + listPiecePos[alfiles[1]].pos.y) % 2)); 
+	}
+
 	return false;
 }
 
 bool tablasPorRepeticion(std::vector<std::string>& historialPosiciones) {
+
+	if (historialPosiciones.size() < 3)
+	{
+		return false;
+	}
+	std::string ultimaPosicion = historialPosiciones.back();
+
+	int repeticiones = 1; //Contamos la última como una repetición ya que no itereamos sobre ella en el bucle
+
+	for (int i = 0; i < historialPosiciones.size() - 1; i++)
+	{
+		if (historialPosiciones[i] == ultimaPosicion)
+		{
+			repeticiones++;
+		}
+
+		if (repeticiones >= 3)
+		{
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -242,66 +397,35 @@ bool tablasPor50Movimientos(int& contador50Movimentos) {
 	return (contador50Movimentos >= 50);
 }
 
-bool tablas(std::vector<Pieces>& listPiecesPos, int jugador, int& contador50Movimientos) {
+bool tablas(std::vector<Pieces> listPiecesPos, int jugador, int& contador50Movimientos, std::vector<std::string>& historialPosiciones, int& tipoTablas) {
 	
-	std::vector<std::string> historialPosiciones;
-
 	if (tablasPorAhogado(listPiecesPos, jugador))
 	{
+		tipoTablas = 1;
 		return true;
 	}
 	else if (tablasPorFaltadeMaterial(listPiecesPos))
 	{
+		tipoTablas = 2;
 		return true;
 	}
 	else if (tablasPorRepeticion(historialPosiciones))
 	{
+		tipoTablas = 3;
 		return true;
 	}
 	else if (tablasPor50Movimientos(contador50Movimientos))
 	{
+		tipoTablas = 4;
 		return true;
 	}
 	else
 	{
+		tipoTablas = 0;
 		return false;
 	}
 	
-	return false;
-}
-
-
-//Funcion para comprobar si al jugador le pertenece la pieza que hay en la casilla que ha seleccionado
-bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador, int& idPieza) {
-
-	for (int i = 0; i < TOTAL_PIECES; i++)
-	{
-		Pieces pieza = listPiecePos[i];
-		if (pieza.active && pieza.pos.x == x && pieza.pos.y == y)
-		{
-			idPieza = i;
-
-			if (jugador == JUGADOR1)
-			{
-				if (!(i >= 16 && i <= 31))
-				{
-					std::cout << "Esa pieza no es tuya!" << std::endl;
-				}
-				return (i >= 16 && i <= 31);
-			}
-			else
-			{
-				if (!(i >= 0 && i <= 15))
-				{
-					std::cout << "Esa pieza no es tuya!" << std::endl;
-				}
-				return (i >= 0 && i <= 15);
-			}
-		}
-	}
-
-	std::cout << "No hay ninguna pieza ahi!" << std::endl;
-
+	tipoTablas = 0;
 	return false;
 }
 
