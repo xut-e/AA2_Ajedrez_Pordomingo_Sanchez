@@ -385,7 +385,7 @@ bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int
 
 bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 	
-	int idRey = (jugador == JUGADOR1) ? 19 : 4;
+	int idRey = (jugador == JUGADOR1) ? 20 : 4;
 
 	if (jaque(listPiecesPos, jugador) && !tieneMovimientosLegales(listPiecesPos, idRey, jugador))
 	{
