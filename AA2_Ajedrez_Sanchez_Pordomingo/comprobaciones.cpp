@@ -6,6 +6,75 @@
 #include "moves.h"
 #include "comprobaciones.h"
 
+void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Position destino, int jugador, bool& movimientoValido, bool& comer, bool& enroque) {
+
+	Position posicionOriginal = copiaPiezas[idPieza].pos;
+	bool estadoOriginalAtive = copiaPiezas[idPieza].active;
+
+	char tipoPieza = toupper(copiaPiezas[idPieza].piece);
+
+	if (tipoPieza == 'P')
+	{
+		if (piezaEnMedio(posicionOriginal, destino, copiaPiezas[idPieza].piece, copiaPiezas, false, (abs(posicionOriginal.x - destino.x) == 2)))
+		{
+			movimientoValido = false;
+			return;
+		}
+		for (int i = 0; i < copiaPiezas.size(); i++)
+		{
+			if (copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y && copiaPiezas[idPieza].active)
+			{
+				movimientoValido = false;
+				return;
+			}
+		}
+	}
+
+	if (tipoPieza == 'T' || tipoPieza == 'B' || tipoPieza == 'Q')
+	{
+		if (piezaEnMedio(posicionOriginal, destino, copiaPiezas[idPieza].piece, copiaPiezas, false, false))
+		{
+			movimientoValido = false;
+			return;
+		}
+	}
+
+	comer = false;
+
+	for (int  i = 0; i < copiaPiezas.size(); i++)
+	{
+		if (copiaPiezas[idPieza].active && copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y)
+		{
+			if ((jugador == JUGADOR1 && !isupper(copiaPiezas[idPieza].piece)) || (jugador == JUGADOR2 && isupper(copiaPiezas[idPieza].piece)))
+			{
+				copiaPiezas[idPieza].active = false;
+				comer = true;
+				break;
+			}
+		}
+	}
+
+	copiaPiezas[idPieza].pos = destino;
+
+	movimientoValido = !jaque(copiaPiezas, jugador);
+
+	copiaPiezas[idPieza].pos = posicionOriginal;
+	copiaPiezas[idPieza].active = estadoOriginalAtive;
+
+	if (comer)
+	{
+		for (int i = 0; i < copiaPiezas.size(); i++)
+		{
+			if (!copiaPiezas[idPieza].active && copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y)
+			{
+				copiaPiezas[idPieza].active = true;
+				break;
+			}
+		}
+	}
+
+}
+
 //A casi toda esta función me ha ayudado la IA, mis implementaciones no funcionaban bien siempre, pero entiendo perfectamente lo que está haciendo y el uso de operadores ternarios
 bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos, bool comer, bool salidaMaxima) {
 
@@ -255,13 +324,70 @@ bool jaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return false;
 }
 
-bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int i) {
-	return true;
+bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int jugador) {
+	
+	if (!listPiecePos[idPieza].active)
+	{
+		return false;
+	}
+
+	std::vector<Position> movimientosPosibles;
+
+	char tipo = toupper(listPiecePos[idPieza].piece);
+
+	switch (tipo)
+	{
+	case 'P':
+		generarMovimientosPeon(listPiecePos[idPieza], jugador, movimientosPosibles);
+		break;
+
+	case 'T':
+		generarMovimientosTorre(listPiecePos[idPieza], jugador, movimientosPosibles);
+		break;
+	case 'H':
+		generarMovimientosCaballo(listPiecePos[idPieza], jugador, movimientosPosibles);
+		break;
+		
+	case 'B':
+		generarMovimientosAlfil(listPiecePos[idPieza], jugador, movimientosPosibles);
+		break;
+
+	case 'Q':
+		generarMovimientosReina(listPiecePos[idPieza], jugador, movimientosPosibles);
+		break;
+
+	case 'K':
+		generarMovimientosRey(listPiecePos[idPieza], jugador, movimientosPosibles);
+		break;
+
+	default:
+		break;
+	}
+
+	for (size_t i = 0; i < movimientosPosibles.size(); i++)
+	{
+		bool movimientoValido = false, comer = false, enroque = false;
+
+		Position destino = movimientosPosibles[i];
+
+		std::vector<Pieces> copiaPiezas = listPiecePos;
+
+		validarMovimientoSimulado(copiaPiezas, idPieza, destino, jugador, movimientoValido, comer, enroque);
+
+		if (movimientoValido)
+		{
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 	
-	if (jaque(listPiecesPos, jugador) && !tieneMovimientosLegales(listPiecesPos, jugador))
+	int idRey = (jugador == JUGADOR1) ? 19 : 4;
+
+	if (jaque(listPiecesPos, jugador) && !tieneMovimientosLegales(listPiecesPos, idRey, jugador))
 	{
 		return true;
 	}
@@ -279,7 +405,7 @@ bool tablasPorAhogado(std::vector<Pieces> listPiecePos, int jugador) {
 	{
 		if (listPiecePos[i].active && playerOwnsPiece(listPiecePos[i].pos.x, listPiecePos[i].pos.y, listPiecePos, jugador, i))
 		{
-			if (tieneMovimientosLegales(listPiecePos, i))
+			if (tieneMovimientosLegales(listPiecePos, i, jugador))
 			{
 				return false;
 			}

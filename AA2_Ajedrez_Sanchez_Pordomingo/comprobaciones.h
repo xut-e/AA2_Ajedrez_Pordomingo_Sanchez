@@ -30,4 +30,6 @@ bool tablasPorRepeticion(std::vector<std::string>& historialPosiciones);
 
 bool tablasPor50Movimientos(int& contador50Movimentos);
 
-bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int i);
+bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int jugador);
+
+void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Position destino, int jugador, bool& movimientoValido, bool& comer, bool& enroque);

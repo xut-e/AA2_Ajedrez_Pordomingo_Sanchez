@@ -12,3 +12,15 @@ void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, boo
 void cambiarPosicion(int idPieza, Position casillaFinal, std::vector<Pieces>& listPiecePos, bool& enroque);
 
 void cambiarPieza(std::vector<Pieces>& listPiecePos, int idPieza, char piezaElegida);
+
+void generarMovimientosPeon(Pieces& peon, int jugador, std::vector<Position>& movimientosPosibles);
+
+void generarMovimientosTorre(Pieces& torre, int jugador, std::vector<Position>& movimientosPosibles);
+
+void generarMovimientosCaballo(Pieces& caballo, int jugador, std::vector<Position>& movimientosPosibles);
+
+void generarMovimientosAlfil(Pieces& alfil, int jugador, std::vector<Position>& movimientosPosibles);
+
+void generarMovimientosReina(Pieces& reina, int jugador, std::vector<Position>& movimientosPosibles);
+
+void generarMovimientosRey(Pieces& rey, int jugador, std::vector<Position>& movimientosPosibles);
