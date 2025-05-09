@@ -33,3 +33,5 @@ bool tablasPor50Movimientos(int& contador50Movimentos);
 bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int jugador);
 
 void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Position destino, int jugador, bool& movimientoValido, bool& comer, bool& enroque);
+
+int encontrarRey(const std::vector<Pieces>& listPiecesPos, int jugador);

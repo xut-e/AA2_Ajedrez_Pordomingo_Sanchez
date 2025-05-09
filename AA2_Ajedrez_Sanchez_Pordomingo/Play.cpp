@@ -56,6 +56,17 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 			//Esta linea es idea de la IA
 			std::string posicionActual = obtenerClaveTablero(listPiecesPos, i);
 
+			if (jaqueMate(listPiecesPos, i)) {
+				checkmate = true;
+				ganador = (i + 1) % JUGADORES; // The other player wins
+				
+				system("cls");
+				updateChessboard(listPiecesPos, chessboard);
+				viewChessBoard(chessboard);
+
+				break;
+			}
+
 			historialPosiciones.push_back(posicionActual);
 
 			do
@@ -181,16 +192,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				ganador = TABLAS;
 				break;
 			}
-
-			if (jaque(listPiecesPos, i))
-			{
-				if (jaqueMate(listPiecesPos, i))
-				{
-					checkmate = true;
-					ganador = i;
-					break;					
-				}
-			}
+			
 
 			if (tablas(listPiecesPos, i, contador50Movimientos, historialPosiciones, tipoTablas))
 			{
