@@ -5,9 +5,99 @@
 #include "Play.h"
 #include "comprobaciones.h"
 
-void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido, Position& casillaFinal, bool& comer, bool& enroque) {
+void generarMovimientosPeon(Pieces& peon, int jugador, std::vector<Position>& movimientosPosibles) {
+	
+	int direccion = (jugador == JUGADOR1) ? -1 : 1;
 
-	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido, casillaFinal, enroque);
+	movimientosPosibles.push_back({ peon.pos.x + direccion, peon.pos.y });
+
+	if ((jugador == JUGADOR1 && peon.pos.x == 6) || (jugador == JUGADOR2 && peon.pos.x == 1))
+	{
+		movimientosPosibles.push_back({ peon.pos.x + 2 * direccion, peon.pos.y });
+	}
+
+	movimientosPosibles.push_back({ peon.pos.x + direccion, peon.pos.y + 1 });
+	movimientosPosibles.push_back({ peon.pos.x + direccion, peon.pos.y - 1 });
+}
+
+void generarMovimientosTorre(Pieces& torre, int jugador, std::vector<Position>& movimientosPosibles) {
+	
+	for (int i = 0; i < BOARD_SIZE; ++i) {
+
+		if (i != torre.pos.y) {
+			movimientosPosibles.push_back({ torre.pos.x, i });
+		}
+
+		if (i != torre.pos.x) {
+			movimientosPosibles.push_back({ i, torre.pos.y });
+		}
+	}
+}
+
+void generarMovimientosCaballo(Pieces& caballo, int jugador, std::vector<Position>& movimientosPosibles) {
+	
+	std::vector<Position> movimientos = { {2, 1},{2, -1},{-2, 1},{-2, -1},{1, 2},{1, -2},{-1, 2},{-1, -2} };
+
+	for (int i = 0; i < movimientos.size(); i++)
+	{
+		Position destino = { caballo.pos.x + movimientos[i].x, caballo.pos.y + movimientos[i].y };
+
+		if (destino.x >= 0 && destino.x < BOARD_SIZE && destino.y >= 0 && destino.y < BOARD_SIZE)
+		{
+			movimientosPosibles.push_back(destino);
+		}
+	}
+}
+
+void generarMovimientosAlfil(Pieces& alfil, int jugador, std::vector<Position>& movimientosPosibles) {
+	
+	for (int i = 1; i < BOARD_SIZE; ++i) {
+		
+		if (alfil.pos.x + i < BOARD_SIZE && alfil.pos.y + i < BOARD_SIZE)
+			movimientosPosibles.push_back({ alfil.pos.x + i, alfil.pos.y + i });
+
+		if (alfil.pos.x + i < BOARD_SIZE && alfil.pos.y - i >= 0)
+			movimientosPosibles.push_back({ alfil.pos.x + i, alfil.pos.y - i });
+
+		if (alfil.pos.x - i >= 0 && alfil.pos.y + i < BOARD_SIZE)
+			movimientosPosibles.push_back({ alfil.pos.x - i, alfil.pos.y + i });
+
+		if (alfil.pos.x - i >= 0 && alfil.pos.y - i >= 0)
+			movimientosPosibles.push_back({ alfil.pos.x - i, alfil.pos.y - i });
+	}
+}
+
+void generarMovimientosReina(Pieces& reina, int jugador, std::vector<Position>& movimientosPosibles){
+	
+	generarMovimientosTorre(reina, jugador, movimientosPosibles);
+	generarMovimientosAlfil(reina, jugador, movimientosPosibles);
+
+}
+
+void generarMovimientosRey(Pieces& rey, int jugador, std::vector<Position>& movimientosPosibles) {
+	
+	for (int dx = -1; dx <= 1; dx++)
+	{
+		for (int dy = -1; dy <= 1; dy++)
+		{
+			if (dx == 0 && dy == 0)
+			{
+				continue;
+			}
+
+			Position destino = { rey.pos.x + dx, rey.pos.y + dy };
+
+			if (destino.x >= 0 && destino.x < BOARD_SIZE && destino.y >= 0 && destino.y < BOARD_SIZE)
+			{
+				movimientosPosibles.push_back(destino);
+			}
+		}
+	}
+}
+
+void movimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugador, bool& movimientoValido, Position& casillaFinal, bool& comer, bool& enroque, int& contador50Movimientos) {
+
+	validarMovimiento(listPiecePos, idPieza, jugador, comer, movimientoValido, casillaFinal, enroque, contador50Movimientos);
 
 }
 
@@ -17,6 +107,7 @@ void cambiarPieza(std::vector<Pieces>& listPiecePos, int idPieza, char piezaEleg
 }
 
 void cambiarPosicion(int idPieza, Position casillaFinal, std::vector<Pieces>& listPiecePos, bool& enroque) {
+	
 	int torre;
 	
 	if (enroque)
@@ -84,7 +175,7 @@ bool menuMovimiento() {
 	}
 }
 
-bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador) {
+bool movePiece(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecePos, int jugador, int& contador50Movimientos, std::vector<std::string>& historialPosiciones) {
 
 	int minimoRango, maximoRango, opcionElegida, x, y, idPieza;
 
@@ -138,7 +229,7 @@ choosePiece:
 	
 	if (menuMovimiento())
 	{
-		movimiento(listPiecePos, idPieza, jugador, movimientoValido, casillaFinal, comer, enroque);
+		movimiento(listPiecePos, idPieza, jugador, movimientoValido, casillaFinal, comer, enroque, contador50Movimientos);
 
 		if (!movimientoValido)
 		{
@@ -159,8 +250,23 @@ choosePiece:
 					}
 				}
 			}
+
+			Position casillaInicial = listPiecePos[idPieza].pos;
+
+
 			cambiarPosicion(idPieza, casillaFinal, listPiecePos, enroque);
+
+			if (jaque(listPiecePos, jugador))
+			{
+				cambiarPosicion(idPieza, casillaInicial, listPiecePos, enroque);
+				std::cout << "Tu rey no puede estar en Jaque!" << std::endl;
+				Sleep(1500);
+				goto choosePiece;
+			}
+
 			listPiecePos[idPieza].moved = true;
+
+
 			
 		}
 		return true;

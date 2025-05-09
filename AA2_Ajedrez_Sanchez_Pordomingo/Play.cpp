@@ -4,6 +4,7 @@
 #include "init.h"
 #include "moves.h"
 #include "comprobaciones.h"
+#include <string>
 
 //Funcion para actualizar el tablero, colocamos las piezas que no han sido capturadas
 void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SIZE][BOARD_SIZE]) {
@@ -20,18 +21,54 @@ void updateChessboard(std::vector<Pieces> listPiecePos, char chessboard[BOARD_SI
 
 }
 
+std::string obtenerClaveTablero(std::vector<Pieces>& listPiecePos, int jugador) {
+
+	std::string clave;
+
+	for (int i = 0; i < listPiecePos.size(); i++)
+	{
+		if (listPiecePos[i].active)
+		{
+			clave += (jugador == JUGADOR1) ? "W" : "B";
+			clave += listPiecePos[i].piece;
+			clave += std::to_string(listPiecePos[i].pos.x);
+			clave += std::to_string(listPiecePos[i].pos.y);
+		}
+	}
+
+	return clave;
+}
+
 //Funcion principal del juego
 void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiecesPos) {
 	
-	bool checkmate = false, rendicion = false, tablas = false;
-	int ganador, idPieza;
+	bool checkmate = false, rendicion = false, hayTablas = false;
+	int ganador, idPieza, contador50Movimientos = 0, tipoTablas = 0;
 	char opcionElegida, opcionRendicion, opcionTablas;
+
+	std::vector<std::string> historialPosiciones;
 	
 	while (true)
 	{
 		//For para los turnos mientras no haya jaque mate o rendicion o tablas
 		for (int i = 0; i < JUGADORES; i++)
 		{
+			//Esta linea es idea de la IA
+			std::string posicionActual = obtenerClaveTablero(listPiecesPos, i);
+
+			if (jaqueMate(listPiecesPos, i)) {
+				checkmate = true;
+				ganador = (i + 1) % JUGADORES; // The other player wins
+				
+				system("cls");
+				updateChessboard(listPiecesPos, chessboard);
+				viewChessBoard(chessboard);
+
+				break;
+			}
+
+			historialPosiciones.push_back(posicionActual);
+
 			do
 			{
 			start:
@@ -39,6 +76,11 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				system("cls");
 				updateChessboard(listPiecesPos, chessboard);
 				viewChessBoard(chessboard);
+
+				if (jaque(listPiecesPos, i))
+				{
+					std::cout << "Jaque!" << std::endl;
+				}
 
 				//Menu que permite al jugador escoger que hacer en su turno
 				std::cout << "Turno de " << ((i == JUGADOR1) ? "blancas." : "negras.") << std::endl;
@@ -48,22 +90,40 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 
 				if (opcionElegida == '1')
 				{
-					if (movePiece(chessboard, listPiecesPos, i))
+					if (movePiece(chessboard, listPiecesPos, i, contador50Movimientos, historialPosiciones))
 					{
 						if (coronacion(listPiecesPos, i, idPieza))
 						{
 							char opcionCoronacion;
-							std::cout << std::endl << "\tB) Alfil.\n\tH) Caballo\n\tR) Torre\n\tQ) Dama\n\n" << "Has coronado un peon, elige en que pieza transformarlo:";
 
-							do
+							if (i == 0)
 							{
-								std::cin >> opcionCoronacion;
+								std::cout << std::endl << "\tB) Alfil.\n\tH) Caballo\n\tT) Torre\n\tQ) Dama\n\n" << "Has coronado un peon, elige en que pieza transformarlo:";
 
-								if (opcionCoronacion != 'B' && opcionCoronacion != 'H' && opcionCoronacion != 'R' && opcionCoronacion != 'Q')
+								do
 								{
-									std::cout << "Selecciona una opcion valida:" << std::endl;
-								}
-							} while (opcionCoronacion != 'B' && opcionCoronacion != 'H' && opcionCoronacion != 'R' && opcionCoronacion != 'Q');
+									std::cin >> opcionCoronacion;
+
+									if (opcionCoronacion != 'B' && opcionCoronacion != 'H' && opcionCoronacion != 'T' && opcionCoronacion != 'Q')
+									{
+										std::cout << "Selecciona una opcion valida:" << std::endl;
+									}
+								} while (opcionCoronacion != 'B' && opcionCoronacion != 'H' && opcionCoronacion != 'T' && opcionCoronacion != 'Q');
+							}
+							else
+							{
+								std::cout << std::endl << "\tb) Alfil.\n\th) Caballo\n\tt) Torre\n\tq) Dama\n\n" << "Has coronado un peon, elige en que pieza transformarlo:";
+
+								do
+								{
+									std::cin >> opcionCoronacion;
+
+									if (opcionCoronacion != 'b' && opcionCoronacion != 'h' && opcionCoronacion != 't' && opcionCoronacion != 'q')
+									{
+										std::cout << "Selecciona una opcion valida:" << std::endl;
+									}
+								} while (opcionCoronacion != 'b' && opcionCoronacion != 'h' && opcionCoronacion != 't' && opcionCoronacion != 'q');
+							}
 
 							cambiarPieza(listPiecesPos, idPieza, opcionCoronacion);
 						}
@@ -97,7 +157,7 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 
 					if (opcionTablas == '1')
 					{
-						tablas = true;
+						hayTablas = true;
 					}
 					else
 					{
@@ -112,12 +172,12 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 					goto start;
 				}
 
-				if (checkmate || rendicion || tablas)
+				if (checkmate || rendicion || hayTablas)
 				{
 					break;
 				}
 
-			} while (opcionElegida != '1' && movePiece(chessboard, listPiecesPos, i));
+			} while (opcionElegida != '1' && movePiece(chessboard, listPiecesPos, i, contador50Movimientos, historialPosiciones));
 
 			
 
@@ -127,31 +187,22 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 				break;
 			}
 
-			if (tablas)
+			if (hayTablas)
 			{
 				ganador = TABLAS;
 				break;
 			}
+			
 
-			if (comprobarJaque(listPiecesPos, i))
+			if (tablas(listPiecesPos, i, contador50Movimientos, historialPosiciones, tipoTablas))
 			{
-				if (comprobarJaqueMate(listPiecesPos, i))
-				{
-					checkmate = true;
-					ganador = i;
-					break;					
-				}
-			}
-
-			if (comprobarTablas(listPiecesPos, i))
-			{
-				tablas = true;
+				hayTablas = true;
 				ganador = TABLAS;
 				break;
 			}
 		}
 
-		if (checkmate || rendicion || tablas)
+		if (checkmate || rendicion || hayTablas)
 		{
 			break;
 		}
@@ -183,6 +234,23 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 	}
 	else if (ganador == TABLAS)
 	{
-		std::cout << "La partida ha quedado en tablas (empate)." << std::endl;
+		std::cout << "La partida ha quedado en tablas (empate). Causa:\n" << std::endl;
+		
+		if (tipoTablas == 1)
+		{
+			std::cout << "1" << std::endl;
+		}
+		else if (tipoTablas == 2)
+		{
+			std::cout << "2" << std::endl;
+		}
+		else if (tipoTablas == 3)
+		{
+			std::cout << "3" << std::endl;
+		}
+		else if (tipoTablas == 4)
+		{
+			std::cout << "4" << std::endl;
+		}
 	}
 }
