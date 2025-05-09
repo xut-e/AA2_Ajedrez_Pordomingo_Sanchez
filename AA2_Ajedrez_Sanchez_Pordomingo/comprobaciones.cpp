@@ -9,66 +9,73 @@
 void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Position destino, int jugador, bool& movimientoValido, bool& comer, bool& enroque) {
 
 	Position posicionOriginal = copiaPiezas[idPieza].pos;
-	bool estadoOriginalAtive = copiaPiezas[idPieza].active;
+	bool estadoOriginalActive = copiaPiezas[idPieza].active;
 
 	char tipoPieza = toupper(copiaPiezas[idPieza].piece);
 
 	if (tipoPieza == 'P')
 	{
-		if (piezaEnMedio(posicionOriginal, destino, copiaPiezas[idPieza].piece, copiaPiezas, false, (abs(posicionOriginal.x - destino.x) == 2)))
+		bool movimientoDoble = (abs(posicionOriginal.x - destino.x) == 2);
+
+		if (piezaEnMedio(posicionOriginal, destino, copiaPiezas[idPieza].piece, copiaPiezas, false, movimientoDoble))
 		{
 			movimientoValido = false;
 			return;
 		}
-		for (int i = 0; i < copiaPiezas.size(); i++)
+		if (destino.y == posicionOriginal.y && destino.x != posicionOriginal.x)
 		{
-			if (copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y && copiaPiezas[idPieza].active)
+			for (int i = 0; i < copiaPiezas.size(); i++)
 			{
-				movimientoValido = false;
-				return;
+				if (copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y && copiaPiezas[idPieza].active)
+				{
+					movimientoValido = false;
+					return;
+				}
 			}
 		}
+		
 	}
-
-	if (tipoPieza == 'T' || tipoPieza == 'B' || tipoPieza == 'Q')
+	else if (tipoPieza == 'T' || tipoPieza == 'B' || tipoPieza == 'Q')
 	{
 		if (piezaEnMedio(posicionOriginal, destino, copiaPiezas[idPieza].piece, copiaPiezas, false, false))
 		{
 			movimientoValido = false;
 			return;
 		}
-	}
-
-	comer = false;
-
-	for (int  i = 0; i < copiaPiezas.size(); i++)
-	{
-		if (copiaPiezas[idPieza].active && copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y)
+		else
 		{
-			if ((jugador == JUGADOR1 && !isupper(copiaPiezas[idPieza].piece)) || (jugador == JUGADOR2 && isupper(copiaPiezas[idPieza].piece)))
+			comer = false;
+
+			for (int i = 0; i < copiaPiezas.size(); i++)
 			{
-				copiaPiezas[idPieza].active = false;
-				comer = true;
-				break;
+				if (copiaPiezas[idPieza].active && copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y)
+				{
+					if ((jugador == JUGADOR1 && !isupper(copiaPiezas[idPieza].piece)) || (jugador == JUGADOR2 && isupper(copiaPiezas[idPieza].piece)))
+					{
+						copiaPiezas[idPieza].active = false;
+						comer = true;
+						break;
+					}
+				}
 			}
-		}
-	}
 
-	copiaPiezas[idPieza].pos = destino;
+			copiaPiezas[idPieza].pos = destino;
 
-	movimientoValido = !jaque(copiaPiezas, jugador);
+			movimientoValido = !jaque(copiaPiezas, jugador);
 
-	copiaPiezas[idPieza].pos = posicionOriginal;
-	copiaPiezas[idPieza].active = estadoOriginalAtive;
+			copiaPiezas[idPieza].pos = posicionOriginal;
+			copiaPiezas[idPieza].active = estadoOriginalActive;
 
-	if (comer)
-	{
-		for (int i = 0; i < copiaPiezas.size(); i++)
-		{
-			if (!copiaPiezas[idPieza].active && copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y)
+			if (comer)
 			{
-				copiaPiezas[idPieza].active = true;
-				break;
+				for (int i = 0; i < copiaPiezas.size(); i++)
+				{
+					if (!copiaPiezas[idPieza].active && copiaPiezas[idPieza].pos.x == destino.x && copiaPiezas[idPieza].pos.y == destino.y)
+					{
+						copiaPiezas[idPieza].active = true;
+						break;
+					}
+				}
 			}
 		}
 	}
@@ -294,7 +301,7 @@ bool jaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 
 	int jugadorAtacante = (jugador == JUGADOR1) ? JUGADOR2 : JUGADOR1;
 
-	Position bk = listPiecesPos[4].pos, wk = listPiecesPos[19].pos;
+	Position bk = listPiecesPos[4].pos, wk = listPiecesPos[20].pos;
 
 	if (jugador == JUGADOR1)
 	{
@@ -326,51 +333,55 @@ bool jaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 
 bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int jugador) {
 	
+
+	std::vector<Position> movimientosPosibles;
+	std::vector<Pieces> copiaPiezas = listPiecePos;
+	bool movimientoValido = false;
+
 	if (!listPiecePos[idPieza].active)
 	{
 		return false;
 	}
-
-	std::vector<Position> movimientosPosibles;
-
-	char tipo = toupper(listPiecePos[idPieza].piece);
-
-	switch (tipo)
+	else if (playerOwnsPiece(listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y, listPiecePos, jugador, idPieza))
 	{
-	case 'P':
-		generarMovimientosPeon(listPiecePos[idPieza], jugador, movimientosPosibles);
-		break;
 
-	case 'T':
-		generarMovimientosTorre(listPiecePos[idPieza], jugador, movimientosPosibles);
-		break;
-	case 'H':
-		generarMovimientosCaballo(listPiecePos[idPieza], jugador, movimientosPosibles);
-		break;
-		
-	case 'B':
-		generarMovimientosAlfil(listPiecePos[idPieza], jugador, movimientosPosibles);
-		break;
+		char tipo = toupper(listPiecePos[idPieza].piece);
 
-	case 'Q':
-		generarMovimientosReina(listPiecePos[idPieza], jugador, movimientosPosibles);
-		break;
+		switch (tipo)
+		{
+		case 'P':
+			generarMovimientosPeon(listPiecePos[idPieza], jugador, movimientosPosibles);
+			break;
 
-	case 'K':
-		generarMovimientosRey(listPiecePos[idPieza], jugador, movimientosPosibles);
-		break;
+		case 'T':
+			generarMovimientosTorre(listPiecePos[idPieza], jugador, movimientosPosibles);
+			break;
+		case 'H':
+			generarMovimientosCaballo(listPiecePos[idPieza], jugador, movimientosPosibles);
+			break;
 
-	default:
-		break;
+		case 'B':
+			generarMovimientosAlfil(listPiecePos[idPieza], jugador, movimientosPosibles);
+			break;
+
+		case 'Q':
+			generarMovimientosReina(listPiecePos[idPieza], jugador, movimientosPosibles);
+			break;
+
+		case 'K':
+			generarMovimientosRey(listPiecePos[idPieza], jugador, movimientosPosibles);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	for (size_t i = 0; i < movimientosPosibles.size(); i++)
 	{
-		bool movimientoValido = false, comer = false, enroque = false;
+		bool comer = false, enroque = false;
 
 		Position destino = movimientosPosibles[i];
-
-		std::vector<Pieces> copiaPiezas = listPiecePos;
 
 		validarMovimientoSimulado(copiaPiezas, idPieza, destino, jugador, movimientoValido, comer, enroque);
 
@@ -380,6 +391,11 @@ bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int
 		}
 	}
 	
+	if (!movimientoValido)
+	{
+		return false;
+	}
+
 	return false;
 }
 
@@ -390,6 +406,10 @@ bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 	if (jaque(listPiecesPos, jugador) && !tieneMovimientosLegales(listPiecesPos, idRey, jugador))
 	{
 		return true;
+	}
+	else
+	{
+		return false;
 	}
 
 	return false;

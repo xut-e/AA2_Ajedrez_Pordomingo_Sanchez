@@ -236,19 +236,19 @@ void play(char chessboard[BOARD_SIZE][BOARD_SIZE], std::vector<Pieces>& listPiec
 		
 		if (tipoTablas == 1)
 		{
-
+			std::cout << "1" << std::endl;
 		}
 		else if (tipoTablas == 2)
 		{
-
+			std::cout << "2" << std::endl;
 		}
 		else if (tipoTablas == 3)
 		{
-
+			std::cout << "3" << std::endl;
 		}
 		else if (tipoTablas == 4)
 		{
-
+			std::cout << "4" << std::endl;
 		}
 	}
 }
