@@ -1,6 +1,8 @@
 #pragma once
 #include "Library.h"
 
+//Constantes globales
+
 #define BOARD_SIZE 8
 
 #define WHITE_SQUARES char(167)
@@ -27,7 +29,4 @@
 
 #define TOTAL_PIECES 32
 
-//for (size_t i = 0; i < listPiecesPos.size(); i++)
-//{
-//	chessboard[listPiecesPos[i].pos[0]][listPiecesPos[i].pos[1]] =  listPiecesPos[i].Piece;
-//}
+#define ESPERA 1500
