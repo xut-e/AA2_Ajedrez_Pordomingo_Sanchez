@@ -10,7 +10,8 @@
 int encontrarRey(const std::vector<Pieces>& listPiecesPos, int jugador) {
 	char reyBuscado = (jugador == JUGADOR1) ? WHITE_KING : BLACK_KING;
 
-	for (int i = 0; i < listPiecesPos.size(); ++i) {
+	for (int i = 0; i < listPiecesPos.size(); ++i) 
+	{
 		if (listPiecesPos[i].active && listPiecesPos[i].piece == reyBuscado) {
 			return i; //Devolvemos el id del rey
 		}
@@ -24,12 +25,11 @@ void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Po
 	bool estadoOriginalActive = copiaPiezas[idPieza].active;
 	char tipoPieza = toupper(copiaPiezas[idPieza].piece);
 
-	// Inicializar valores
 	movimientoValido = false;
 	comer = false;
 	enroque = false;
 
-	// Validar movimiento segun tipo de pieza
+	//Validamos movimiento segun tipo de pieza (ayuda de la IA)
 	if (tipoPieza == 'P') 
 	{
 		bool movimientoDoble = (abs(posicionOriginal.x - destino.x) == 2);
@@ -43,7 +43,8 @@ void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Po
 		if (destino.y == posicionOriginal.y) 
 		{
 			
-			for (int i = 0; i < copiaPiezas.size(); i++) {
+			for (int i = 0; i < copiaPiezas.size(); i++) 
+			{
 				if (copiaPiezas[i].active && copiaPiezas[i].pos.x == destino.x && copiaPiezas[i].pos.y == destino.y) {
 					return; // Casilla ocupada
 				}
@@ -52,10 +53,12 @@ void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Po
 		// Captura diagonal
 		else 
 		{
-			
 			bool capturaValida = false;
-			for (int i = 0; i < copiaPiezas.size(); i++) {
-				if (copiaPiezas[i].active && copiaPiezas[i].pos.x == destino.x && copiaPiezas[i].pos.y == destino.y) {
+
+			for (int i = 0; i < copiaPiezas.size(); i++) 
+			{
+				if (copiaPiezas[i].active && copiaPiezas[i].pos.x == destino.x && copiaPiezas[i].pos.y == destino.y) 
+				{
 					if ((jugador == JUGADOR1 && !isupper(copiaPiezas[i].piece)) || (jugador == JUGADOR2 && isupper(copiaPiezas[i].piece))) 
 					{
 						comer = true;
@@ -80,7 +83,8 @@ void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Po
 		}
 
 		// Verificar captura
-		for (int i = 0; i < copiaPiezas.size(); i++) {
+		for (int i = 0; i < copiaPiezas.size(); i++) 
+		{
 			if (copiaPiezas[i].active && copiaPiezas[i].pos.x == destino.x && copiaPiezas[i].pos.y == destino.y) 
 			{
 				if ((jugador == JUGADOR1 && !isupper(copiaPiezas[i].piece)) || (jugador == JUGADOR2 && isupper(copiaPiezas[i].piece))) 
@@ -113,7 +117,8 @@ void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Po
 	//Si se ha comido en la simulacion retornamos el estado original
 	if (comer) 
 	{
-		for (int i = 0; i < copiaPiezas.size(); i++) {
+		for (int i = 0; i < copiaPiezas.size(); i++) 
+		{
 			if (!copiaPiezas[i].active && copiaPiezas[i].pos.x == destino.x && copiaPiezas[i].pos.y == destino.y) 
 			{
 				copiaPiezas[i].active = true;
@@ -123,9 +128,10 @@ void validarMovimientoSimulado(std::vector<Pieces>& copiaPiezas, int idPieza, Po
 	}
 }
 
-//
+//Funcion para comprobar que no hay piezas entre la casilla inicial y la final (los caballos nunca llaman a esta función)
 bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std::vector<Pieces> listPiecePos, bool comer, bool salidaMaxima) {
 
+	//Horizontal o vertical
 	if (pieza == WHITE_ROOK || pieza == BLACK_ROOK || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN || ((pieza == WHITE_PAWN || pieza == BLACK_PAWN) && !comer && salidaMaxima) || (pieza == BLACK_KING || pieza == WHITE_KING))
 	{
 
@@ -162,6 +168,7 @@ bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std
 		}
 	}
 
+	//Diagonal (ayuda de la IA)
 	if (pieza == WHITE_BISHOP || pieza == BLACK_BISHOP || pieza == WHITE_QUEEN || pieza == BLACK_QUEEN)
 	{
 		int deltaX = abs(casillaFinal.x - casillaInicial.x), deltaY = abs(casillaFinal.y - casillaInicial.y);
@@ -192,15 +199,16 @@ bool piezaEnMedio(Position casillaInicial, Position casillaFinal, char pieza,std
 
 bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vector<Pieces> listPiecePos)
 {
+	//Aquí sí que use una variable Position, era un momento más avanzado del desarrollo
 	Position rango;
 
 	if (jugadorAtacante == JUGADOR1) {
-		rango.x = 16;
-		rango.y = 31;
+		rango.x = (TOTAL_PIECES / 2);
+		rango.y = (TOTAL_PIECES - 1);
 	}
 	else {
 		rango.x = 0;
-		rango.y = 15;
+		rango.y = ((TOTAL_PIECES / 2) - 1);
 	}
 
 	for (int i = rango.x; i <= rango.y; i++) {
@@ -217,12 +225,13 @@ bool casillaAtacada(Position& casillaAComprobar, int jugadorAtacante, std::vecto
 	return false;
 }
 
+//Función para verificar si hay coronación al acabar el movimiento
 bool coronacion(std::vector<Pieces>& listPiecePos, int jugador, int& idPieza) {
 	
 	
 	if (jugador == JUGADOR1)
 	{
-		for (int i = 16; i <= 31; i++)
+		for (int i = (TOTAL_PIECES / 2); i < TOTAL_PIECES; i++)
 		{
 			if (listPiecePos[i].piece == WHITE_PAWN && listPiecePos[i].active && listPiecePos[i].pos.x == 0)
 			{
@@ -235,7 +244,7 @@ bool coronacion(std::vector<Pieces>& listPiecePos, int jugador, int& idPieza) {
 	{
 		if (jugador == JUGADOR2)
 		{
-			for (int i = 0; i < 16; i++)
+			for (int i = 0; i < (TOTAL_PIECES / 2); i++)
 			{
 				if (listPiecePos[i].piece == BLACK_PAWN && listPiecePos[i].active && listPiecePos[i].pos.x == 7)
 				{
@@ -262,19 +271,19 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 
 			if (jugador == JUGADOR1)
 			{
-				if (!(i >= 16 && i <= 31))
+				if (!(i >= (TOTAL_PIECES / 2) && i < TOTAL_PIECES))
 				{
 					std::cout << "Esa pieza no es tuya!" << std::endl;
 				}
-				return (i >= 16 && i <= 31);
+				return (i >= (TOTAL_PIECES / 2) && i < TOTAL_PIECES);
 			}
 			else
 			{
-				if (!(i >= 0 && i <= 15))
+				if (!(i >= 0 && i < (TOTAL_PIECES / 2)))
 				{
 					std::cout << "Esa pieza no es tuya!" << std::endl;
 				}
-				return (i >= 0 && i <= 15);
+				return (i >= 0 && i < (TOTAL_PIECES / 2));
 			}
 		}
 	}
@@ -284,6 +293,7 @@ bool playerOwnsPiece(int x, int y, std::vector<Pieces> listPiecePos, int jugador
 	return false;
 }
 
+//Función que sirve sobre todo para el enroque, ya que el rey no se puede enrocar si hay una pieza atacando su paso hacia este
 bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector<Pieces>& listPiecePos, int jugadorAtacante) {
 	
 	int step = (casillaFinal.y > casillaInicial.y) ? 1 : -1;
@@ -304,7 +314,8 @@ bool caminoDespejado(Position casillaInicial, Position casillaFinal, std::vector
 
 	return true;
 }
-//IA
+
+//Función para saber si una pieza puede atacar ujna casilla es imprescindible para el jaque (ayuda de la IA, aquí gracias a ella fue la primera vez que pensé en la implementación del switch case para el ajedrez y descubrí toupper() y abs())
 bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaAComprobar, std::vector<Pieces>& listPiecePos) 
 {
 	int dx = abs(casillaAComprobar.x - posPieza.x), dy = abs(casillaAComprobar.y - posPieza.y);
@@ -338,6 +349,7 @@ bool puedeAtacar(Position& posPieza, char tipoPieza, Position& casillaAComprobar
 	}
 }
 
+//Función para comprobar si hay jaque
 bool jaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 	int idRey = encontrarRey(listPiecesPos, jugador);
 	if (idRey == -1) return false;
@@ -348,6 +360,7 @@ bool jaque(std::vector<Pieces>& listPiecesPos, int jugador) {
 	return casillaAtacada(posRey, jugadorAtacante, listPiecesPos);
 }
 
+//Función para comprobar si una pieza tiene movimientos legales (la usaremos en la comprobación del jaque mate y en la comprobación de tablas por ahogado)
 bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int jugador) {
 	
 
@@ -355,12 +368,14 @@ bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int
 	std::vector<Pieces> copiaPiezas = listPiecePos;
 	bool movimientoValido = false;
 
+	//Si la pieza que queremos comprobar ha sido comida ni lo miramos
 	if (!listPiecePos[idPieza].active)
 	{
 		return false;
 	}
 	else if (playerOwnsPiece(listPiecePos[idPieza].pos.x, listPiecePos[idPieza].pos.y, listPiecePos, jugador, idPieza))
 	{
+		//En funcion de la pieza la mandamos a una funcion diferente
 
 		char tipo = toupper(listPiecePos[idPieza].piece);
 
@@ -394,6 +409,7 @@ bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int
 		}
 	}
 
+	//Para cada uno de los movimientos posibles comprobamos si es válido
 	for (size_t i = 0; i < movimientosPosibles.size(); i++)
 	{
 		bool comer = false, enroque = false;
@@ -402,12 +418,13 @@ bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int
 
 		validarMovimientoSimulado(copiaPiezas, idPieza, destino, jugador, movimientoValido, comer, enroque);
 
+		//Si encontramos un sólo movimiento válido retornamos true
 		if (movimientoValido)
 		{
 			return true;
 		}
 	}
-	
+	//Si llegamos hasta aquí es porque ningún movimiento es válido
 	if (!movimientoValido)
 	{
 		return false;
@@ -416,7 +433,9 @@ bool tieneMovimientosLegales(std::vector<Pieces>& listPiecePos, int idPieza, int
 	return false;
 }
 
+//Función para comprobar si hay jaque mate
 bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
+	
 	// 1. Verificamos que el rey está en jaque
 	if (!jaque(listPiecesPos, jugador)) {
 		return false;
@@ -431,10 +450,13 @@ bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 		return false;
 	}
 
-	// 4. Verificamos si alguna otra pieza puede bloquear el jaque
-	for (int i = (jugador == JUGADOR1 ? 16 : 0);
-		i < (jugador == JUGADOR1 ? 32 : 16); ++i) {
-		if (i == idRey || !listPiecesPos[i].active) continue;
+	// 4. Verificamos si alguna otra pieza puede bloquear el jaque (ayuda de la IA)
+	for (int i = (jugador == JUGADOR1 ? 16 : 0); i < (jugador == JUGADOR1 ? 32 : 16); ++i) 
+	{
+		if (i == idRey || !listPiecesPos[i].active)
+		{
+			continue;
+		}
 
 		std::vector<Position> movimientos;
 		char tipo = toupper(listPiecesPos[i].piece);
@@ -460,24 +482,26 @@ bool jaqueMate(std::vector<Pieces>& listPiecesPos, int jugador) {
 			break;
 		}
 
-		for (const auto& destino : movimientos) {
+		//(IA). Pero entiendo lo que hace, está buscando si después de mover alguna pieza del jugador la jugada acaba en jaque y si encuentra una que no, es que el rey puede cubrirse o moverse, de lo contrario será jaque mate
+		for (Position& destino : movimientos) {
 			std::vector<Pieces> copia = listPiecesPos;
 			bool valido = false, comer = false, enroque = false;
 
 			validarMovimientoSimulado(copia, i, destino, jugador, valido, comer, enroque);
 
 			if (valido) {
-				// Verificar si este movimiento elimina el jaque
+
 				if (!jaque(copia, jugador)) {
-					return false; // Hay un movimiento que elimina el jaque
+					return false;
 				}
 			}
 		}
 	}
 
-	return true; // Confirmado jaque mate
+	return true;
 }
 
+//Comprobamos tablas por ahogado (ninguna pieza tiene movimientos legales y el rey NO está en jaque)
 bool tablasPorAhogado(std::vector<Pieces> listPiecePos, int jugador) {
 	if (jaque(listPiecePos, jugador))
 	{
@@ -488,6 +512,7 @@ bool tablasPorAhogado(std::vector<Pieces> listPiecePos, int jugador) {
 	{
 		if (listPiecePos[i].active && playerOwnsPiece(listPiecePos[i].pos.x, listPiecePos[i].pos.y, listPiecePos, jugador, i))
 		{
+			//Si alguna pieza tiene movimientos legales, no hay tablas
 			if (tieneMovimientosLegales(listPiecePos, i, jugador))
 			{
 				return false;
@@ -498,7 +523,9 @@ bool tablasPorAhogado(std::vector<Pieces> listPiecePos, int jugador) {
 	return true;
 }
 
+//Funcion para contar el material, sólo hay cuatro casos de tablas por falta de material
 bool tablasPorFaltadeMaterial(std::vector<Pieces> listPiecePos) {
+	
 	int piezasBlancas = 0, piezasNegras = 0;
 
 	bool alfilBlanco = false, caballoBlanco = false, alfilNegro = false, caballoNegro = false;
@@ -575,15 +602,18 @@ bool tablasPorFaltadeMaterial(std::vector<Pieces> listPiecePos) {
 	return false;
 }
 
+//Gracias a habernos guardado el historial de la partida con la clave es súmamente sencillo comprobar si el tablero se ha repetido en 3 ocasiones mientras juega el mismo jugador
 bool tablasPorRepeticion(std::vector<std::string>& historialPosiciones) {
 
+	//Si el historial < 3 significa que todavía no ha habido al menos 3 jugadas por lo que no tiene sentido comprobarlo
 	if (historialPosiciones.size() < 3)
 	{
 		return false;
 	}
 	std::string ultimaPosicion = historialPosiciones.back();
 
-	int repeticiones = 1; //Contamos la última como una repetición ya que no itereamos sobre ella en el bucle
+	//Contamos la última como una repetición ya que no itereamos sobre ella en el bucle
+	int repeticiones = 1; 
 
 	for (int i = 0; i < historialPosiciones.size() - 1; i++)
 	{
@@ -601,11 +631,13 @@ bool tablasPorRepeticion(std::vector<std::string>& historialPosiciones) {
 	return false;
 }
 
+//Hemos definido contador50movimientos para que si se mueve un peón o se realiza una captura se ponga a 0, por lo que si llega a 50 sabremos que cumple las condiciones
 bool tablasPor50Movimientos(int& contador50Movimentos) {
 
 	return (contador50Movimentos >= 50);
 }
 
+//Función principal de tablas, comprobamos si alguna de las funciones de tablas devuelve true, y en tal caso establecemos el caso y retornamos true
 bool tablas(std::vector<Pieces> listPiecesPos, int jugador, int& contador50Movimientos, std::vector<std::string>& historialPosiciones, int& tipoTablas) {
 	
 	if (tablasPorAhogado(listPiecesPos, jugador))
@@ -654,6 +686,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 	{
 		movimientoValido = true;
 
+		//Preguntamos por una casilla a la que mover hasta que se introduzca una válida (por tamaño del tablero)
 		do
 		{
 			std::cin >> x >> y;
@@ -682,14 +715,14 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 
 		if (jugador == JUGADOR1 && comer)
 		{
-			if (idPiezaComida >= 16 && idPiezaComida <= 31)
+			if (idPiezaComida >= (TOTAL_PIECES / 2) && idPiezaComida < TOTAL_PIECES)
 			{
 				movimientoValido = false;
 			}
 		}
 		else if (jugador == JUGADOR2 && comer)
 		{
-			if (idPiezaComida >= 0 && idPiezaComida <= 15)
+			if (idPiezaComida >= 0 && idPiezaComida < (TOTAL_PIECES / 2))
 			{
 				movimientoValido = false;
 			}
@@ -699,6 +732,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 
 		if (movimientoValido)
 		{
+			//El movimiento de los peones lo podía haber hecho con una variable int step = (jugador == JUGADOR1) ? -1 : 1; Pero era un momento temprano del desarrollo y todavía no había usado IA
 			if (listPiecePos[idPieza].piece == BLACK_PAWN) {
 				if (comer) 
 				{
@@ -744,7 +778,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 					}
 				}
 			}
-			// Movimiento del alfil
+			// Movimiento del alfil (ayuda IA)
 			else if (listPiecePos[idPieza].piece == BLACK_BISHOP || listPiecePos[idPieza].piece == WHITE_BISHOP)
 			{
 				int deltaX = abs(x - casillaInicial.x);
@@ -759,7 +793,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 					movimientoValido = false;
 				}
 			}
-
+			//Movimiento de la torre
 			else if (listPiecePos[idPieza].piece == BLACK_ROOK || listPiecePos[idPieza].piece == WHITE_ROOK)
 			{
 				if (((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
@@ -771,6 +805,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 					movimientoValido = false;
 				}
 			}
+			//Movimiento del caballo
 			else if (listPiecePos[idPieza].piece == BLACK_KNIGHT || listPiecePos[idPieza].piece == WHITE_KNIGHT)
 			{
 				if ((x == listPiecePos[idPieza].pos.x + 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x - 2 && (y == listPiecePos[idPieza].pos.y + 1 || y == listPiecePos[idPieza].pos.y - 1)) || (x == listPiecePos[idPieza].pos.x + 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)) || (x == listPiecePos[idPieza].pos.x - 1 && (y == listPiecePos[idPieza].pos.y + 2 || y == listPiecePos[idPieza].pos.y - 2)))
@@ -782,6 +817,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 					movimientoValido = false;
 				}
 			}
+			//Movimiento del rey (incluye enroque)
 			else if (listPiecePos[idPieza].piece == BLACK_KING || listPiecePos[idPieza].piece == WHITE_KING)
 			{
 				if ((((x == listPiecePos[idPieza].pos.x || x == listPiecePos[idPieza].pos.x - 1 || x == listPiecePos[idPieza].pos.x + 1) && (y == listPiecePos[idPieza].pos.y || y == listPiecePos[idPieza].pos.y - 1 || y == listPiecePos[idPieza].pos.y + 1)) && !(x == listPiecePos[idPieza].pos.x && y == listPiecePos[idPieza].pos.y) && !casillaAtacada(casillaFinal, jugadorAtacante, listPiecePos)) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
@@ -864,6 +900,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 					movimientoValido = false;
 				}
 			}
+			//Movimiento de la reina (mezcla alfil y torre)
 			else if (listPiecePos[idPieza].piece == BLACK_QUEEN || listPiecePos[idPieza].piece == WHITE_QUEEN)
 			{
 				if ((((x - listPiecePos[idPieza].pos.x) + (y - listPiecePos[idPieza].pos.y) == 0 || (x - listPiecePos[idPieza].pos.x) - (y - listPiecePos[idPieza].pos.y) == 0) || ((x == listPiecePos[idPieza].pos.x && (y > listPiecePos[idPieza].pos.y || y < listPiecePos[idPieza].pos.y)) || (y == listPiecePos[idPieza].pos.y && (x < listPiecePos[idPieza].pos.x || x > listPiecePos[idPieza].pos.x)))) && !piezaEnMedio(casillaInicial, casillaFinal, listPiecePos[idPieza].piece, listPiecePos, comer, salidaMaxima))
@@ -877,6 +914,7 @@ void validarMovimiento(std::vector<Pieces>& listPiecePos, int idPieza, int jugad
 			}
 		}
 
+		//Condiciones para el contador50movimientos
 		if (movimientoValido && ((listPiecePos[idPieza].piece == BLACK_PAWN || listPiecePos[idPieza].piece == WHITE_PAWN) || comer))
 		{
 			contador50Movimientos = 0;
